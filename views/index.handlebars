@@ -1,0 +1,147 @@
+<div class="row">
+  <div class="col-sm-4" style="
+        margin:24px auto;
+        background-color: white;
+        max-width:500px;
+        min-height: 150px;
+        {{!--border: 1px solid pink;--}}
+        ">
+
+    {{> stats icon="inr" heading="Total Transactions" amount=totaltransactions color="coral" }}
+    <div id="chart1" style="background-color: white"></div>
+  </div>
+  <div class="col-sm-4" style="
+        margin:24px auto;
+        background-color: white;
+        max-width:500px;
+        min-height: 150px;
+        {{!--border: 1px solid pink;--}}
+        ">
+    {{> stats icon="checkmark" heading="Successful Online Transactions" amount=successonline color="royalblue"}}
+    <div id="chart2" style="background-color: white"></div>
+  </div>
+  <div class="col-sm-4" style="
+        margin:24px auto;
+        background-color: white;
+        max-width:500px;
+        min-height: 150px;
+        {{!--border: 1px solid pink;--}}
+        ">
+    {{> stats icon="users" heading="Total Users" amount=totalusers color="green"}}
+    <div id="chart3" style="background-color: white"></div>
+
+  </div>
+</div>
+<div id="googleMap" style="width:100%;height:700px; margin:0 0;"></div>
+<script>
+  var address = JSON.parse(decodeURIComponent("{{{address}}}"))
+
+  function myMap() {
+    var myOptions = { zoom: 13, center: new google.maps.LatLng(18.5204303, 73.85674369999992), mapTypeId: google.maps.MapTypeId.ROADMAP };
+    var map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
+    var marker = [];
+
+    if (address) {
+      for (var i = 0; i < address.length; i++) {
+        marker[i] = new google.maps.Marker({
+          position: { lat: address[i].lat, lng: address[i].lng },
+          map: map,
+          title: "Seller"
+        });
+      }
+    }
+
+  }
+
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCno_CsDM9YF09SC5dh1Ds4PDFSoE7ZZqQ&callback=myMap"></script>
+
+<script>
+  var totalonline = JSON.parse(decodeURIComponent("{{{totalonline}}}"))
+  var transactionhistory = JSON.parse(decodeURIComponent("{{{transactionhistory}}}"))
+  var users = JSON.parse(decodeURIComponent("{{{parsedusers}}}"))
+  var chart1 = c3.generate({
+    bindto: '#chart1',
+    data: {
+      x: 'x',
+      //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+      columns: [
+        transactionhistory.date,
+        //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+        transactionhistory.amount
+      ]
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%Y-%m-%d'
+        }
+      }
+    }
+  });
+
+  var chart2 = c3.generate({
+    bindto: '#chart2',
+    data: {
+      x: 'x',
+      //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+      columns: [
+        totalonline.dates,
+        totalonline.online
+      ]
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%Y-%m-%d'
+        }
+      }
+    }
+  });
+  var chart3 = c3.generate({
+    bindto: '#chart3',
+    data: {
+      x: 'x',
+      //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+      columns: [
+        users.created_date_time,
+        //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+        users.no
+      ]
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%Y-%m-%d'
+        }
+      }
+    }
+  });
+
+</script>
+
+{{!--
+<h1>{{{isSession}}} </h1>--}} {{#*inline "stats"}}
+<div class="row" style="min-height: 150px; background-color: white">
+  <div class="col-sm-4">
+    <h1 style="text-align: right;margin-top: 32px;color:{{color}};
+;">
+
+      <span class="icon-{{icon}}" style="font-size:50px;text-align:end ;margin-top: 20px" aria-hidden="true"></span>
+    </h1>
+  </div>
+  <div class="col-sm-8">
+    <h1 style="color:{{color}};
+    text-align: center;
+    font-weight: bolder;
+    font-size: 4em;">
+      {{amount}}
+    </h1>
+    <h4 style="text-align: center;color:dimgray;">{{heading}}</h5>
+  </div>
+</div>
+{{/inline}}

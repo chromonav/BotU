@@ -1,0 +1,38 @@
+<div class="jumbotron" style="margin-top:30px;justify-content:center;text-align: center">
+  <img class="img-responsive" style="width:330px;margin-left: auto;margin-right: auto" src="./images/deazz.png" />
+  <h1>You make great things happen!</h1>
+  <p>You are on your way to game changing insights.<br/>You just need to Sign In! </p>
+</div>
+
+<div  style="width:500px;margin-left:auto;margin-right:auto">
+
+  {{#if error}}
+  <p>{{error}}</p>
+  {{/if}}
+  <form class="form-horizontal" action="/signin" method="post">
+    <fieldset>
+      <div class="form-group">
+        <label for="inputEmail" class="col-lg-2 control-label">Username:</label>
+        <div class="col-lg-10">
+          <input type="text" name="username" class="form-control" id="inputEmail" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword" class="col-lg-2 control-label">Password:</label>
+        <div class="col-lg-10">
+          <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
+          <div class="checkbox">
+            <label>
+          </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10">
+          <input type="submit" class="btn btn-primary " value="Sign in">
+        </div>
+      </div>
+
+    </fieldset>
+  </form>
+</div>
