@@ -11,19 +11,19 @@ var session = require('express-session');
 const request = require("request");
 const rp = require('request-promise')
 const _ = require("lodash")
+const RiveScript = require("rivescript")
 require('dotenv').config()
 
-/*Sys Var*/
-const APP_AUTH = {
-    base_url: process.env.BASE_URL,
-    clientid: process.env.CLIENT_ID,
-    clientsecret: process.env.CLIENT_SECRET,
-    password: process.env.PASSWORD,
-    username: process.env.USERNAME
-}
-// console.dir(APP_AUTH)
+var bot = new RiveScript();
+bot.loadFile("brain/test.rive", (batch_num) => {
 
-
+    console.log("Batch #" + batch_num + " has finished loading!");
+    // Now the replies must be sorted!
+    bot.sortReplies();
+    // And now we're free to get a reply from the brain!
+}, (err) => {
+    console.log("Error when loading files: " + error);
+});
 // app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());                  // simulate DELETE and PUT
@@ -41,29 +41,16 @@ app.use(function (req, res, next) {
     res.status(404).send("Sorry could not find that")
 })
 
-router.get('/', function (req, res, next) {
-    if (req.session.username) {
-        if (isAuth({ username: req.session.username, password: req.session.password })) {
-            res.render('index', {
-                isSession: req.session.username ? true : false,
-                totaltransactions: APP_DATA.totaltransactions,
-                totalonline: encodeURIComponent(JSON.stringify(APP_DATA.mainonline)),
-                successonline: APP_DATA.successonline,
-                transactionhistory: encodeURIComponent(JSON.stringify(APP_DATA.maintranshis)),
-                parsedusers: encodeURIComponent(JSON.stringify(APP_DATA.parsedusers)),
-                totalusers: APP_DATA.totalusers,
-                address: encodeURIComponent(JSON.stringify(APP_DATA.address))
-            });
-        } else {
-            res.render('signin', { error: "Wrong Password" })
-        }
-    } else {
-        res.redirect('/signin')
-    }
+router.get('/', ensureAuth, function (req, res, next) {
+    res.render('index', { isSession: req.session.username ? true : false });
 });
 
 router.get('/signin', function (req, res, next) {
     res.render('signin', { isSession: req.session.username ? true : false });
+});
+
+router.get('/signup', function (req, res, next) {
+    res.render('signup');
 });
 
 router.post('/signin', function (req, res, next) {
@@ -78,6 +65,12 @@ router.post('/signin', function (req, res, next) {
     }
 
 })
+
+router.get('/reply', ensureAuth, function (req, res, next) {
+    var reply = bot.reply("local-user", "Hello, bot!");
+    res.send(reply)
+})
+
 
 router.get('/signout', function (req, res, next) {
     req.session.destroy(function (err) {
@@ -100,7 +93,17 @@ const isAuth = function (details) {
     } else return false;
 }
 
-
+function ensureAuth(req, res, next) {
+    if (req.session.username) {
+        if (isAuth({ username: req.session.username, password: req.session.password })) {
+            next()
+        } else {
+            res.render('signin', { error: "Wrong Password" })
+        }
+    } else {
+        res.redirect('/signin')
+    }
+}
 
 
 

@@ -1,0 +1,292 @@
+/*
+Ref:
+Thanks to:
+http://span-tag.com/bootstrap-navbar/
+*/
+
+body {
+  min-height: 700px;
+  background: #5f2c82;
+  background: -webkit-linear-gradient(to right, #49a09d, #5f2c82);
+  background: linear-gradient(to right, #49a09d, #5f2c82);
+}
+
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
+   background:#0a0;
+}
+
+/* IE 6 */
+ * html #footer {
+   position:absolute;
+   top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
+}
+
+
+.navbar {
+  overflow: hidden;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+/* added to  .nav */
+.normal {
+xheight: 75px; /* this causes drop down to lose color ??? */
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+transition: 0.5s;
+}
+
+.normal .navbar-right {
+padding-top: 12px;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+transition: 0.5s;
+}
+.navbar-brand {
+padding: 0px !important;
+}
+.navbar-brand img {
+padding: 5px;
+max-height: 75px;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+transition: 0.5s;
+}
+.shrink {
+height: 50px;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+transition: 0.5s;
+}
+.shrink .navbar-right {
+padding-top: 0px;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+transition: 0.5s;
+}
+.shrink .navbar-brand img {
+max-height: 50px;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+transition: 0.5s;
+}
+
+
+.form-horizontal {
+    width: 300px;
+    margin: auto ;
+}
+
+.box {
+  width:300px;
+  background-color: #f7f7f7;
+}
+
+.signup {
+  text-transform: uppercase;
+  align-content: center;
+  color: #507D95;
+  background: #F8F9FA;
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+img {
+  height: 50px;
+  position: relative;
+  left : 10px;
+}
+
+.reg {
+  width: 100%;
+  border: 2px
+}
+
+.input {
+    width: 100%;
+    border: none;
+    height: 40px;
+    text-align: center;
+    color: black;
+    font-size: 20px;
+    border-bottom : 2px solid rgba(10, 0, 0, 0.3);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-bottom: 7px;
+    background: transparent;
+}
+
+
+.input:focus {
+border-bottom:  3px solid #4A999B;
+}
+
+
+.Absolute-Center {
+  margin-top: 8%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: auto;
+  position: relative;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.Absolute-Center.is-Responsive {
+  width: 50%;
+  height: 50%;
+  min-width: 260px;
+  max-width: 400px;
+  min-height: 400px;
+  padding: 35px;
+}
+.btn1 {
+  position: relative;
+  height: 40px;
+
+  display: block;
+  margin: 30px auto;
+  padding: 0;
+
+  overflow: hidden;
+
+  border-width: 0;
+  outline: none;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+
+  background-color: #507D95;
+  color: #ecf0f1;
+
+  transition: background-color .3s;
+}
+
+.btn1:hover, .btn1:focus {
+  background-color: #4A9B9C;
+  color: #ecf0f1;
+}
+
+.btn1 > * {
+  position: relative;
+}
+
+.btn1 span {
+  display: block;
+  padding: 12px 24px;
+}
+
+.btn1:before {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: block;
+  width: 0;
+  padding-top: 0;
+
+  border-radius: 100%;
+
+  background-color: rgba(236, 240, 241, .3);
+
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.btn1:active:before {
+  width: 120%;
+  padding-top: 120%;
+
+  transition: width .2s ease-out, padding-top .2s ease-out;
+}
+
+/* Styles, not important */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+
+h2 {
+  font-weight: normal;
+}
+
+
+.col-3 {
+  float: left;
+  width: 27.33%;
+  margin: 40px 3%;
+  position: relative;
+}
+
+
+
+.tog {
+  display: none;
+}
+
+.hid {
+  display: none;
+}
+
+
+/* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
+@media screen and (max-width: 600px) {
+  .navbar-right button {
+    display: none;
+  }
+  .hid{
+    display: none;
+  }
+  .tog {
+    width: 50px;
+    height: 45px;
+    color: #f7f7f7;
+    display: table-row;
+    background-color: #26ABE3;
+    border: none;
+    border-radius: 5px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+
+/* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
+@media screen and (max-width: 600px) {
+
+  .clicked {
+    display: block;
+    width: 100%;
+  }
+  .ah button {
+  height: 50px;
+  width: 110%;
+  margin-left: -5%;
+  background-color:#F8F9FA;
+  border: none;
+  border-top: 2px solid rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-family: 'Montserrat', serif;
+  font-size: 20px;
+  color: #507D95;
+  text-transform: uppercase;
+  }
+
+  .ah button:focus {
+    background-color:#26ABE3;
+  }
+}

@@ -24,9 +24,11 @@ Run the server
 npm start
 ```
 
-Author
+Authors
 -----------
-Michael Lancaster
+Chinmay Kularni
+Saurabh Narhe
+Rutwik Sardeshmukh
 
 License
 -----------
