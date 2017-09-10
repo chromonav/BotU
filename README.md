@@ -1,7 +1,7 @@
-deAzz-Analytics
+Bot U
 ============================
 
-Analalytics Dashboard
+Chabot App
 
 Usage
 -----------
@@ -13,11 +13,6 @@ sudo npm install
 ```
 Set up .env file it should have following details:
 ```
-1. BASE_URL 
-2. CLIENT_ID 
-3. CLIENT_SECRET 
-4. PASSWORD
-5. USERNAME 
 ```
 Run the server
 ```
@@ -26,8 +21,8 @@ npm start
 
 Authors
 -----------
-Chinmay Kularni
-Saurabh Narhe
+Chinmay Kularni  
+Saurabh Narhe  
 Rutwik Sardeshmukh
 
 License
