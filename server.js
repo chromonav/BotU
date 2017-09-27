@@ -9,14 +9,18 @@ var express = require('express')
     , moment = require("moment");
 var session = require('express-session');
 const request = require("request");
-const rp = require('request-promise')
 const _ = require("lodash")
 const RiveScript = require("rivescript")
 require('dotenv').config()
-
+const db = require('odbc')()
+const cn = "DRIVER={FreeTDS};SERVER=localhost;UID=root;PWD=hello1234;DATABASE=ubot"
+db.open(cn,function(err){
+    if(err){
+        console.dir(err)
+    }
+})
 var bot = new RiveScript();
 bot.loadFile("brain/test.rive", (batch_num) => {
-
     console.log("Batch #" + batch_num + " has finished loading!");
     // Now the replies must be sorted!
     bot.sortReplies();
@@ -54,7 +58,7 @@ router.get('/signup', function (req, res, next) {
 });
 
 router.post('/signin', function (req, res, next) {
-    // console.dir(req.body)
+    console.dir(req.body)
     if (isAuth(req.body)) {
         req.session.username = req.body.username;
         req.session.password = req.body.password;
