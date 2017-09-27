@@ -8,29 +8,30 @@ var express = require('express')
     , port = process.env.PORT || 8000
     , router = express.Router()
     , moment = require("moment");
+
 // mysql connection
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "botu"
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "botu"
 });
 
-connection.connect(function(err) {
-  if(err) {
-    console.log("Error connecting db");
-  } else {
-    console.log("Connected");
-  }
+connection.connect(function (err) {
+    if (err) {
+        console.log("Error connecting db");
+    } else {
+        console.log("Connected");
+    }
 })
 
-connection.query("SELECT * FROM stud", function(err, rows, fields) {
-  if(err) {
-    console.log("error");
-  } else {
-    console.log("sucess");
-  }
+connection.query("SELECT * FROM stud", function (err, rows, fields) {
+    if (err) {
+        console.log("error");
+    } else {
+        console.log("sucess");
+    }
 })
 
 
@@ -38,13 +39,6 @@ var session = require('express-session');
 const request = require("request");
 const _ = require("lodash")
 const RiveScript = require("rivescript")
-
-
-db.open(cn,function(err){
-    if(err){
-        console.dir(err)
-    }
-})
 
 var bot = new RiveScript();
 bot.loadFile("brain/test.rive", (batch_num) => {
@@ -55,6 +49,8 @@ bot.loadFile("brain/test.rive", (batch_num) => {
 }, (err) => {
     console.log("Error when loading files: " + error);
 });
+
+
 // app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());                  // simulate DELETE and PUT
@@ -72,7 +68,7 @@ app.use(function (req, res, next) {
     res.status(404).render("404")
 })
 
-router.get('/', ensureAuth, function (req, res, next) {
+router.get('/', function (req, res, next) {
     res.render('index', { isSession: req.session.username ? true : false });
 });
 
@@ -114,16 +110,16 @@ router.get('/signout', function (req, res, next) {
 })
 
 
-router.get('/admin',ensureAuth, function(req, res) {
-  res.render("admin",{ isSession: req.session.username ? true : false });
+router.get('/admin', ensureAuth, function (req, res) {
+    res.render("admin", { isSession: req.session.username ? true : false });
 })
+var server = app.listen(port);
 
-app.listen(port);
 console.log('App running on port', port);
 
 const isAuth = function (details) {
     // console.dir(details)
-    if ( (details.username == "Deazz" && details.password == "Deazz") || (details.username == "admin" && details.password == "admin") ) {
+    if ((details.username == "Deazz" && details.password == "Deazz") || (details.username == "admin" && details.password == "admin")) {
         return true;
     } else return false;
 }
@@ -139,3 +135,13 @@ function ensureAuth(req, res, next) {
         res.redirect('/signin')
     }
 }
+
+var io = require('socket.io').listen(server);
+
+io.on('connection', function (socket) {
+    socket.emit("chat_reply", { text: "helloe" })
+    socket.on("client_message", function (data) {
+        var reply = bot.reply("local-user", data.text);
+        socket.emit("chat_reply", { text: reply })
+    })
+})
