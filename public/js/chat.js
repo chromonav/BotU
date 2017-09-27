@@ -18,8 +18,11 @@ $(document).ready(function () {
         socket.emit("client_message", {
             text: message
         })
+
         $(".message_input").val("")
+
         $(".messages").append(`
+        
         <li class="message right appeared">
             <div class="avatar"></div>
             <div class="text_wrapper">
