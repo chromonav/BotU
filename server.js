@@ -8,6 +8,32 @@ var express = require('express')
     , port = process.env.PORT || 8000
     , router = express.Router()
     , moment = require("moment");
+// mysql connection
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "botu"
+});
+
+connection.connect(function(err) {
+  if(err) {
+    console.log("Error connecting db");
+  } else {
+    console.log("Connected");
+  }
+})
+
+connection.query("SELECT * FROM stud", function(err, rows, fields) {
+  if(err) {
+    console.log("error");
+  } else {
+    console.log("sucess");
+  }
+})
+
+
 var session = require('express-session');
 const request = require("request");
 const _ = require("lodash")
@@ -43,7 +69,7 @@ app.use(session({
 app.use('/', router);
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 app.use(function (req, res, next) {
-    res.status(404).send("Sorry could not find that")
+    res.status(404).render("404")
 })
 
 router.get('/', ensureAuth, function (req, res, next) {
@@ -68,7 +94,6 @@ router.post('/signin', function (req, res, next) {
     } else {
         res.render('signin', { error: "Wrong Username or Password" })
     }
-
 })
 
 router.get('/reply', ensureAuth, function (req, res, next) {
@@ -88,12 +113,17 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
+
+router.get('/admin',ensureAuth, function(req, res) {
+  res.render("admin",{ isSession: req.session.username ? true : false });
+})
+
 app.listen(port);
 console.log('App running on port', port);
 
 const isAuth = function (details) {
     // console.dir(details)
-    if (details.username == "Deazz" && details.password == "Deazz") {
+    if ( (details.username == "Deazz" && details.password == "Deazz") || (details.username == "admin" && details.password == "admin") ) {
         return true;
     } else return false;
 }
@@ -109,6 +139,3 @@ function ensureAuth(req, res, next) {
         res.redirect('/signin')
     }
 }
-
-
-
