@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express')
     , exphbs = require('express-handlebars')
     , morgan = require('morgan')
@@ -11,14 +12,14 @@ var session = require('express-session');
 const request = require("request");
 const _ = require("lodash")
 const RiveScript = require("rivescript")
-require('dotenv').config()
-const db = require('odbc')()
-const cn = "DRIVER={FreeTDS};SERVER=localhost;UID=root;PWD=hello1234;DATABASE=ubot"
+
+
 db.open(cn,function(err){
     if(err){
         console.dir(err)
     }
 })
+
 var bot = new RiveScript();
 bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Batch #" + batch_num + " has finished loading!");
