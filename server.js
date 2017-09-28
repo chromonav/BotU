@@ -12,27 +12,28 @@ var express = require('express')
 // mysql connection
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-    host: "localhost",
+    host: "35.201.179.83",
     user: "root",
-    password: "root",
-    database: "botu"
+    password: "hello1234",
+    database:"main"
 });
 
 connection.connect(function (err) {
     if (err) {
-        console.log("Error connecting db");
+        console.dir(err)
     } else {
         console.log("Connected");
     }
 })
 
-connection.query("SELECT * FROM stud", function (err, rows, fields) {
-    if (err) {
-        console.log("error");
-    } else {
-        console.log("sucess");
-    }
-})
+// connection.query("SHOW TABLES", function (err, rows, fields) {
+//     if (err) {
+//         console.log("error");
+//     } else {
+//         console.dir(rows)
+//         console.dir(fields)
+//     }
+// })
 
 
 var session = require('express-session');
