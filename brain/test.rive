@@ -262,7 +262,5 @@
 + hey bot i (need|want) *
 - <set qwer=<formally>>You can get <get qwer> at following stores
 
-
-+   where can i get  * 
-- <set por=<formal>>you can get <get por> at 
-
++test [calling] javascript
+-response from javascript: <call>say_hello</call>

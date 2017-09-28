@@ -15,7 +15,7 @@ var connection = mysql.createConnection({
     host: "35.201.179.83",
     user: "root",
     password: "hello1234",
-    database:"main"
+    database: "main"
 });
 
 connection.connect(function (err) {
@@ -39,8 +39,17 @@ connection.connect(function (err) {
 var session = require('express-session');
 const request = require("request");
 const _ = require("lodash")
+
+/* BOT STUFF */
 const RiveScript = require("rivescript")
 var bot = new RiveScript();
+
+bot.setSubroutine("say_hello", function (rs, args) {
+    return new bot.Promise(function (resolve, result) {
+        resolve("hello")
+    })
+})
+
 bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Batch #" + batch_num + " has finished loading!");
     // Now the replies must be sorted!
@@ -50,7 +59,8 @@ bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Error when loading files: " + error);
 });
 
-// app.use(morgan('dev'));                     // log every request to the console
+/* ROUTE STUFF */
+app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());                  // simulate DELETE and PUT
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -67,7 +77,7 @@ app.use(function (req, res, next) {
     res.status(404).render("404")
 })
 
-router.get('/', function (req, res, next) {
+router.get('/',ensureAuth, function (req, res, next) {
     res.render('index', { isSession: req.session.username ? true : false });
 });
 
@@ -92,6 +102,8 @@ router.post('/signin', function (req, res, next) {
 })
 
 router.get('/reply', ensureAuth, function (req, res, next) {
+
+
     var reply = bot.reply("local-user", "Hello, bot!");
     res.send(reply)
 })
@@ -108,20 +120,19 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-name=["hello","hello1","hello2","hello3","hello4",]
-router.get('/admin',ensureAuth, function(req, res) {
-  res.render("admin",{ isSession: req.session.username ? true : false });
+router.get('/admin', ensureAuth, function (req, res) {
+    res.render("admin", { isSession: req.session.username ? true : false });
 })
 var server = app.listen(port);
 
 
 
-router.get('/products', function(req, res) {
-  res.render("products");
+router.get('/products', function (req, res) {
+    res.render("products");
 })
 
-router.get('/stores', function(req, res) {
-  res.render("stores");
+router.get('/stores', function (req, res) {
+    res.render("stores");
 })
 
 
@@ -150,7 +161,17 @@ var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
     socket.emit("chat_reply", { text: "helloe" })
     socket.on("client_message", function (data) {
-        var reply = bot.reply("local-user", data.text);
-        socket.emit("chat_reply", { text: reply })
+
+        bot.replyAsync("local-user", data.text, this, function (error, reply) {
+            if (!error) {
+                socket.emit("chat_reply", { text: reply })
+
+                // you can use reply here
+            } else {
+                socket.emit("chat_reply", { text: error })
+
+            }
+        });
+
     })
 })
