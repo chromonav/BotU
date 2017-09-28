@@ -239,7 +239,7 @@
 -<set item=<formal>>You can get <get item> from spencers store, you may also get it in Om vitthal  store.
 
 + i want *
-- <set item=<formal>>sure you may get<get item> from Big Bazar.
+- <set item=<formal>>sure you may get <get item> from Big Bazar.
 
 + what all items are available in * [store|shop]
 - <set store=<formal>> You can get the following items in <get store>.
