@@ -10,16 +10,17 @@ socket.on('chat_reply', function (data) {
             </div>
         </li>
     `)
+    $(".messages").animate({ scrollTop: $(".messages").prop('scrollHeight')}, 300);
 });
 
 $(document).ready(function () {
-    $('#send').click(function () {
+    $('.send_message').click(function () {
         var message = $(".message_input").val()
         socket.emit("client_message", {
             text: message
-        })
-
-        $(".message_input").val("")
+        }
+        )
+      $(".message_input").val("")
 
         $(".messages").append(`
         
@@ -32,5 +33,29 @@ $(document).ready(function () {
     `)
 
     })
-
+    
+    
 })
+
+
+$('.message_input').keypress(function (e) {
+    if (e.which == 13) {
+            var message = $(".message_input").val()
+            socket.emit("client_message", {
+                text: message
+            }
+            )
+          $(".message_input").val("")
+    
+            $(".messages").append(`
+            
+            <li class="message right appeared">
+                <div class="avatar"></div>
+                <div class="text_wrapper">
+                    <div class="text">${message}</div>
+                </div>
+            </li>
+        `)
+      return false;    //<---- Add this line
+    }
+});
