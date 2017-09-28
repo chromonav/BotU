@@ -9,7 +9,7 @@ On your terminal.
 
 Install the node packages.
 ```
-sudo npm install
+npm install
 ```
 Set up .env file it should have following details:
 ```
