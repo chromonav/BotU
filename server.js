@@ -7,6 +7,7 @@ var express = require('express')
     , port = process.env.PORT || 8000
     , router = express.Router()
     , moment = require("moment");
+
 // mysql connection
 var mysql = require('mysql');
 var connection = mysql.createConnection({
@@ -38,13 +39,6 @@ const request = require("request");
 const _ = require("lodash")
 const RiveScript = require("rivescript")
 require('dotenv').config()
-const db = require('odbc')()
-const cn = "DRIVER={FreeTDS};SERVER=localhost;UID=root;PWD=hello1234;DATABASE=ubot"
-db.open(cn,function(err){
-    if(err){
-        console.dir(err)
-    }
-})
 var bot = new RiveScript();
 bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Batch #" + batch_num + " has finished loading!");
@@ -54,6 +48,7 @@ bot.loadFile("brain/test.rive", (batch_num) => {
 }, (err) => {
     console.log("Error when loading files: " + error);
 });
+
 // app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());                  // simulate DELETE and PUT
@@ -112,10 +107,21 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-
+name=["hello","hello1","hello2","hello3","hello4",]
 router.get('/admin',ensureAuth, function(req, res) {
   res.render("admin",{ isSession: req.session.username ? true : false });
 })
+
+
+
+router.get('/products', function(req, res) {
+  res.render("products");
+})
+
+router.get('/stores', function(req, res) {
+  res.render("stores");
+})
+
 
 app.listen(port);
 console.log('App running on port', port);
