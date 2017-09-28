@@ -39,11 +39,6 @@ var session = require('express-session');
 const request = require("request");
 const _ = require("lodash")
 const RiveScript = require("rivescript")
-<<<<<<< HEAD
-require('dotenv').config()
-=======
-
->>>>>>> a4178b488bfadecf59bdf1ef4f33a0dc1ab9b8f7
 var bot = new RiveScript();
 bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Batch #" + batch_num + " has finished loading!");
@@ -54,10 +49,6 @@ bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Error when loading files: " + error);
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a4178b488bfadecf59bdf1ef4f33a0dc1ab9b8f7
 // app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());                  // simulate DELETE and PUT
@@ -116,19 +107,12 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-<<<<<<< HEAD
 name=["hello","hello1","hello2","hello3","hello4",]
 router.get('/admin',ensureAuth, function(req, res) {
   res.render("admin",{ isSession: req.session.username ? true : false });
-=======
-
-router.get('/admin', ensureAuth, function (req, res) {
-    res.render("admin", { isSession: req.session.username ? true : false });
->>>>>>> a4178b488bfadecf59bdf1ef4f33a0dc1ab9b8f7
 })
 var server = app.listen(port);
 
-<<<<<<< HEAD
 
 
 router.get('/products', function(req, res) {
@@ -141,8 +125,6 @@ router.get('/stores', function(req, res) {
 
 
 app.listen(port);
-=======
->>>>>>> a4178b488bfadecf59bdf1ef4f33a0dc1ab9b8f7
 console.log('App running on port', port);
 
 const isAuth = function (details) {
