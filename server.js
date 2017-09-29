@@ -118,7 +118,6 @@ router.get('/admin', ensureAuth, function (req, res) {
 var server = app.listen(port);
 
 
-
 router.get('/products', function (req, res) {
     connection.query("select * from products", (err, rows, fiels) => {
         res.render("products", { data: rows });
@@ -126,7 +125,9 @@ router.get('/products', function (req, res) {
 })
 
 router.get('/stores', function (req, res) {
-    res.render("stores");
+    connection.query("select * from stores", (err, rows, fiels) => {
+        res.render("stores", { data: rows });
+    })
 })
 
 

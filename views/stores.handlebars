@@ -29,16 +29,15 @@
                     </tr>
                 </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Reliance</td>
-                            <td>Kothrud</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Big Bazaar</td>
-                            <td>Pune</td>
-                        </tr>
+
+                        {{#each data}}
+                            <tr>
+                            <td>{{this.sid}}</td>
+                            <td>{{this.sname}}</td>
+                            <td>{{this.address}}</td>
+                            </tr>
+                        {{/each}}
+
                     </tbody>
             </table>
     </div>
