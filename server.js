@@ -123,6 +123,12 @@ router.get('/products', function (req, res) {
     })
 })
 
+router.post('/addProduct', function(req, res, next) {
+    if(connection.query(`insert into products(pname, price) values("${req.body.newProduct}", "${req.body.newPrice}")`)) {
+        res.redirect("products");
+    }
+})
+
 router.post('/deleteProduct', function(req, res, next) {
     if(connection.query(`delete from products where pid="${req.body.delid}"`)) {
         res.redirect('products');
@@ -135,6 +141,12 @@ router.get('/stores', function (req, res) {
     connection.query("select * from stores", (err, rows, fiels) => {
         res.render("stores", { data: rows });
     })
+})
+
+router.post('/addStore', function(req, res, next) {
+    if(connection.query(`insert into stores(sname, address) values("${req.body.newStore}", "${req.body.newLocation}")`)) {
+        res.redirect("stores");
+    }
 })
 
 router.post('/deleteStore', function(req, res, next) {

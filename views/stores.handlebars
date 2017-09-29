@@ -23,13 +23,21 @@
        </div>
          </tr>
          </thead>
-              <thead>
+              <thead> 
                   <tr>
                       <th>Id</th>
                       <th class="pname">Store</th>
                       <th>Location</th>
                       <th>Delete</th>
                     </tr>
+                    <tr>
+                    <form action="/addStore" method="POST"> 
+                      <td style="padding-top:18px; font-size:18px">New</td>
+                      <td><input type="text" name="newStore" class="form-control" placeholder="New Store Name..."></td>
+                      <td><input type="text" name="newLocation" class="form-control" placeholder="Location..."></td>
+                      <td><button type="submit" name="add" value="add" class="btn btn-primary btn-xs"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                    </form>    
+                  </tr>
                 </thead>
                     <tbody>
 

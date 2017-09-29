@@ -30,14 +30,23 @@
       <th>Price</th>
       <th>Delete</th>
      </tr>
+     
     </thead>
     <tbody>
-
+        
+        <tr>
+           <form action="/addProduct" method="POST"> 
+                <td style="padding-top:18px; font-size:18px">New</td>
+                <td><input type="text" name="newProduct" class="form-control" placeholder="New Product Name..."></td>
+                <td><input type="text" name="newPrice" class="form-control" placeholder="Price..."></td>
+                <td><button type="submit" name="add" value="add" class="btn btn-primary btn-xs"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+            </form>    
+        </tr>
      {{#each data}}
      <tr class="data">
       <td>{{this.pid}}</td>
       <td>{{this.pname}}</td>
-      <td>{{this.price}}</td>
+      <td><i class="fa fa-inr" aria-hidden="true"></i>{{this.price}}</td>
       <form action="/deleteProduct" method="POST"><td><button type="submit" name="delid" value={{this.pid}} class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" name="delete" value="delete" ><i class="fa fa-trash" aria-hidden="true"></i></button></td></form>
 </button>
 

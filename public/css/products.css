@@ -30,3 +30,8 @@
 .data {
   font-size: 17px;
 }
+
+.data:hover {
+  background-color: #EEF3F6;
+
+}
