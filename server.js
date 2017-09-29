@@ -15,7 +15,7 @@ var connection = mysql.createConnection({
     host: "35.201.179.83",
     user: "root",
     password: "hello1234",
-    database: "main"
+    database: "project"
 });
 
 connection.connect(function (err) {
@@ -26,14 +26,6 @@ connection.connect(function (err) {
     }
 })
 
-// connection.query("SHOW TABLES", function (err, rows, fields) {
-//     if (err) {
-//         console.log("error");
-//     } else {
-//         console.dir(rows)
-//         console.dir(fields)
-//     }
-// })
 
 
 var session = require('express-session');
@@ -77,7 +69,7 @@ app.use(function (req, res, next) {
     res.status(404).render("404")
 })
 
-router.get('/',ensureAuth, function (req, res, next) {
+router.get('/', ensureAuth, function (req, res, next) {
     res.render('index', { isSession: req.session.username ? true : false });
 });
 
@@ -128,7 +120,9 @@ var server = app.listen(port);
 
 
 router.get('/products', function (req, res) {
-    res.render("products");
+    connection.query("select * from products", (err, rows, fiels) => {
+        res.render("products", { data: rows });
+    })
 })
 
 router.get('/stores', function (req, res) {
@@ -139,18 +133,27 @@ router.get('/stores', function (req, res) {
 
 const isAuth = function (details) {
     // console.dir(details)
-    if ((details.username == "Deazz" && details.password == "Deazz") || (details.username == "admin" && details.password == "admin")) {
-        return true;
-    } else return false;
+    return new Promise(function (resolve, reject) {
+        connection.query(`select * from user where username="${details.username}" and password="${details.password}"`, function (err, rows, fields) {
+            if (err) {
+                console.dir(err);
+                reject(false)
+            } else {
+                console.dir(rows)
+                console.dir(fields)
+                resolve(true)
+            }
+        })
+    })
 }
 
 function ensureAuth(req, res, next) {
     if (req.session.username) {
-        if (isAuth({ username: req.session.username, password: req.session.password })) {
+        isAuth({ username: req.session.username, password: req.session.password }).then(function () {
             next()
-        } else {
-            res.render('signin', { error: "Wrong Password" })
-        }
+        }).catch(function () {
+            res.redirect('/signin')
+        })
     } else {
         res.redirect('/signin')
     }
