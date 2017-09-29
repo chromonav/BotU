@@ -112,20 +112,20 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-router.get('/admin', ensureAuth, function (req, res) {
+router.get('/admin', function (req, res) {
     res.render("admin", { isSession: req.session.username ? true : false });
 })
 var server = app.listen(port);
 
 
 
-router.get('/products', ensureAuth, function (req, res) {
+router.get('/products', function (req, res) {
     connection.query("select * from products", (err, rows, fiels) => {
         res.render("products", { data: rows });
     })
 })
 
-router.get('/stores',ensureAuth function (req, res) {
+router.get('/stores',function (req, res) {
     res.render("stores");
 })
 
