@@ -12,29 +12,33 @@
            <form action="#" method="get" class="sear">
                <div class="input-group">
                      <input class="form-control" id="system-search" name="q" placeholder="Search for Store" required>
-                   <!-- <span class="input-group-btn">
-                       <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                   </span> -->
+                   </td>
+                   <td><span class="input-group-btn">
+			    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+		  </span>
+          </td> 
                </div>
            </form>
-         </td>
+         
        </div>
          </tr>
          </thead>
               <thead>
                   <tr>
                       <th>Id</th>
-                      <th>Store</th>
+                      <th class="pname">Store</th>
                       <th>Location</th>
+                      <th>Delete</th>
                     </tr>
                 </thead>
                     <tbody>
 
                         {{#each data}}
-                            <tr>
+                            <tr class="data">
                             <td>{{this.sid}}</td>
                             <td>{{this.sname}}</td>
                             <td>{{this.address}}</td>
+                            <form action="/deleteStore" method="POST"><td><button type="submit" name="delid" value={{this.sid}} class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" name="delete" value="delete" ><i class="fa fa-trash" aria-hidden="true"></i></button></td></form>    
                             </tr>
                         {{/each}}
 

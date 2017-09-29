@@ -95,7 +95,6 @@ router.post('/signin', function (req, res, next) {
 
 router.get('/reply', ensureAuth, function (req, res, next) {
 
-
     var reply = bot.reply("local-user", "Hello, bot!");
     res.send(reply)
 })
@@ -124,13 +123,27 @@ router.get('/products', function (req, res) {
     })
 })
 
+router.post('/deleteProduct', function(req, res, next) {
+    if(connection.query(`delete from products where pid="${req.body.delid}"`)) {
+        res.redirect('products');
+    } else {
+        console.log("Error while deleting data product");
+    }
+})
+
 router.get('/stores', function (req, res) {
     connection.query("select * from stores", (err, rows, fiels) => {
         res.render("stores", { data: rows });
     })
 })
 
-
+router.post('/deleteStore', function(req, res, next) {
+    if(connection.query(`delete from stores where sid="${req.body.delid}"`)) {
+        res.redirect('stores');
+    } else {
+        console.log("Error while deleting data product");
+    }
+})
 
 const isAuth = function (details) {
     // console.dir(details)

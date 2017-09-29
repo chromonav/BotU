@@ -12,31 +12,38 @@
         <form action="#" method="get" class="sear">
          <div class="input-group">
           <input class="form-control" id="system-search" name="q" placeholder="Search for Product" required>
-          <!-- <span class="input-group-btn">
-											 <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-									 </span> -->
+          <td><span class="input-group-btn">
+			    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+		  </span>
+          </td> 
          </div>
         </form>
        </td>
+       
       </div>
      </tr>
     </thead>
     <thead>
      <tr>
       <th>Id</th>
-      <th>Product</th>
+      <th class="pname">Products</th>
       <th>Price</th>
+      <th>Delete</th>
      </tr>
     </thead>
     <tbody>
 
      {{#each data}}
-     <tr>
+     <tr class="data">
       <td>{{this.pid}}</td>
       <td>{{this.pname}}</td>
       <td>{{this.price}}</td>
+      <form action="/deleteProduct" method="POST"><td><button type="submit" name="delid" value={{this.pid}} class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" name="delete" value="delete" ><i class="fa fa-trash" aria-hidden="true"></i></button></td></form>
+</button>
+
      </tr>
      {{/each}}
+
     
     </tbody>
    </table>
