@@ -108,7 +108,7 @@ router.get('/signout', function (req, res, next) {
         } else {
             // console.log('logout')
             res.redirect('/')
-        }
+        }   
     })
 })
 
