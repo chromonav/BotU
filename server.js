@@ -39,8 +39,16 @@ const RiveScript = require("rivescript")
 var bot = new RiveScript();
 
 bot.setSubroutine("say_hello", function (rs, args) {
-    return new bot.Promise(function (resolve, result) {
-        resolve("hello")
+    console.dir(args)
+    return new bot.Promise(function (resolve, reject) {
+       connection.query(`select * from stores limit 1`,function(err,row,fields){
+           if(err){
+               console.dir(err)
+               reject("some error")
+           }
+           console.dir(row)
+           resolve(`${row[0].sname} located in ${row[0].address}`)
+       })
     })
 })
 
