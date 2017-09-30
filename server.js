@@ -83,6 +83,7 @@ router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
+<<<<<<< HEAD
 router.post('/register', function(req, res, next) {
     var uname = req.body.uname;
     var fname = req.body.fname;
@@ -102,6 +103,17 @@ router.post('/register', function(req, res, next) {
            console.log(err);
        }
      })
+=======
+router.post('/signup', function (req, res, next) {
+    data = req.body;
+    connection.query(`add into user(username,password,email) values("${data.username}","${data.password}","${data.email}")`, function (err, rows, fields) {
+        if (err) {
+            res.send("err")
+        } else {
+            res.send("done")
+        }
+    })
+>>>>>>> a933358bc1fe27305f735b8e12ed5331987ad482
 })
 
 router.post('/signin', function (req, res, next) {
@@ -130,7 +142,7 @@ router.get('/signout', function (req, res, next) {
         } else {
             // console.log('logout')
             res.redirect('/')
-        }   
+        }
     })
 })
 
@@ -146,14 +158,14 @@ router.get('/products', function (req, res) {
     })
 })
 
-router.post('/addProduct', function(req, res, next) {
-    if(connection.query(`insert into products(pname, price) values("${req.body.newProduct}", "${req.body.newPrice}")`)) {
+router.post('/addProduct', function (req, res, next) {
+    if (connection.query(`insert into products(pname, price) values("${req.body.newProduct}", "${req.body.newPrice}")`)) {
         res.redirect("products");
     }
 })
 
-router.post('/deleteProduct', function(req, res, next) {
-    if(connection.query(`delete from products where pid="${req.body.delid}"`)) {
+router.post('/deleteProduct', function (req, res, next) {
+    if (connection.query(`delete from products where pid="${req.body.delid}"`)) {
         res.redirect('products');
     } else {
         console.log("Error while deleting data product");
@@ -166,14 +178,14 @@ router.get('/stores', function (req, res) {
     })
 })
 
-router.post('/addStore', function(req, res, next) {
-    if(connection.query(`insert into stores(sname, address) values("${req.body.newStore}", "${req.body.newLocation}")`)) {
+router.post('/addStore', function (req, res, next) {
+    if (connection.query(`insert into stores(sname, address) values("${req.body.newStore}", "${req.body.newLocation}")`)) {
         res.redirect("stores");
     }
 })
 
-router.post('/deleteStore', function(req, res, next) {
-    if(connection.query(`delete from stores where sid="${req.body.delid}"`)) {
+router.post('/deleteStore', function (req, res, next) {
+    if (connection.query(`delete from stores where sid="${req.body.delid}"`)) {
         res.redirect('stores');
     } else {
         console.log("Error while deleting data product");
@@ -213,13 +225,13 @@ function ensureAuth(req, res, next) {
 var io = require('socket.io').listen(server);
 
 io.on('connection', function (socket) {
-    socket.emit("chat_reply", { text: "helloe" })
+    // socket.emit("chat_reply", { text: "helloe" })
     socket.on("client_message", function (data) {
 
         bot.replyAsync("local-user", data.text, this, function (error, reply) {
             if (!error) {
                 socket.emit("chat_reply", { text: reply })
-
+                // connection.query(`insert into question()`)
                 // you can use reply here
             } else {
                 socket.emit("chat_reply", { text: error })
