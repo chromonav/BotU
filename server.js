@@ -83,7 +83,6 @@ router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
-<<<<<<< HEAD
 router.post('/register', function(req, res, next) {
     var uname = req.body.uname;
     var fname = req.body.fname;
@@ -92,9 +91,9 @@ router.post('/register', function(req, res, next) {
     var add = req.body.address;
     var epass = md5(req.body.pass);
 
-    var sql = "INSERT INTO user(username, password, fname, lname, address, mob) VALUES('" + uname + "','" + epass +"','" + fname + "','" + lname + "','" + add + "','" + mob + "')";
+    var QUERY_STRING =`INSERT INTO user(username, password, fname, lname, address, mob) VALUES("${uname}","${epass}","${fname}","${lname}","${add}","${mob}");`
 
-     connection.query(sql, [epass], function(err, rows, fields) {
+     connection.query(QUERY_STRING,function(err, rows, fields) {
        if(!err){
         console.log("Inserted new User");
         res.redirect('/signin'); 
@@ -103,17 +102,6 @@ router.post('/register', function(req, res, next) {
            console.log(err);
        }
      })
-=======
-router.post('/signup', function (req, res, next) {
-    data = req.body;
-    connection.query(`add into user(username,password,email) values("${data.username}","${data.password}","${data.email}")`, function (err, rows, fields) {
-        if (err) {
-            res.send("err")
-        } else {
-            res.send("done")
-        }
-    })
->>>>>>> a933358bc1fe27305f735b8e12ed5331987ad482
 })
 
 router.post('/signin', function (req, res, next) {
