@@ -9,6 +9,8 @@ var express = require('express')
     , router = express.Router()
     , moment = require("moment");
 
+var md5 = require('md5');
+
 // mysql connection
 var mysql = require('mysql');
 var connection = mysql.createConnection({
@@ -81,10 +83,31 @@ router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
+router.post('/register', function(req, res, next) {
+    var uname = req.body.uname;
+    var fname = req.body.fname;
+    var lname = req.body.lname;
+    var mob = req.body.mob;
+    var add = req.body.address;
+    var epass = md5(req.body.pass);
+
+    var sql = "INSERT INTO user(username, password, fname, lname, address, mob) VALUES('" + uname + "','" + epass +"','" + fname + "','" + lname + "','" + add + "','" + mob + "')";
+
+     connection.query(sql, [epass], function(err, rows, fields) {
+       if(!err){
+        console.log("Inserted new User");
+        res.redirect('/signin'); 
+       } else {
+           console.log("Error while registering user ");
+           console.log(err);
+       }
+     })
+})
+
 router.post('/signin', function (req, res, next) {
     console.dir(req.body)
     if (isAuth(req.body)) {
-        req.session.username = req.body.username;
+        req.session.username = req.body.username; 
         req.session.password = req.body.password;
         // console.dir(req.session)
         res.redirect('/')
@@ -160,13 +183,15 @@ router.post('/deleteStore', function(req, res, next) {
 const isAuth = function (details) {
     // console.dir(details)
     return new Promise(function (resolve, reject) {
-        connection.query(`select * from user where username="${details.username}" and password="${details.password}"`, function (err, rows, fields) {
-            if (err) {
+         var epass = md5(details.password);
+
+        connection.query(`select * from user where username="${details.username}" and password="`+epass +`"`, function (err, rows, fields) {
+            if (err || rows.length < 1) {
                 console.dir(err);
                 reject(false)
             } else {
                 console.dir(rows)
-                console.dir(fields)
+               // console.dir(fields)
                 resolve(true)
             }
         })
