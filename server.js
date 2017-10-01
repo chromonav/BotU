@@ -38,7 +38,7 @@ const _ = require("lodash")
 const RiveScript = require("rivescript")
 var bot = new RiveScript();
 
-bot.setSubroutine("say_hello", function (rs, args) {
+bot.setSubroutine("find_product_in_store", function (rs, args) {
     console.dir(args)
     return new bot.Promise(function (resolve, reject) {
        connection.query(`select * from stores limit 1`,function(err,row,fields){
