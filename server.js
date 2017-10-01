@@ -157,7 +157,9 @@ router.get('/products/:id?', function (req, res ) {
         })
     } else {
         //code for specific store-products
-
+        connection.query("select a.* from products a, store_products b where b.pid=a.pid and b.sid=?", i, (err, rows, fiels) => {
+            res.render("products", { data: rows });
+        })
     }
 })
 
