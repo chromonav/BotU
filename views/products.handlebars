@@ -41,7 +41,7 @@
               <td><input type="text" name="newProduct" class="form-control" placeholder="New Product Name..."></td>
               <td><input type="text" name="newPrice" class="form-control" placeholder="Price..."></td>
               <td><button type="submit" name="add" value="add" class="btn btn-primary btn-xs"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
-            </form>
+              <input type="hidden" name="storeid" value={{storeid}}/> </form>
           </tr>
           {{/if}} {{#each data}}
           <tr class="data">

@@ -158,20 +158,19 @@ router.get('/products/:storeid?', function (req, res) {
     } else {
         //code for specific store-products
         connection.query("select a.* from products a, store_products b where b.pid=a.pid and b.sid=?", i, (err, rows, fields) => {
-            res.render("products", { data: rows, canadd: true });
+            res.render("products", { data: rows, canadd: true, storeid: i });
         })
     }
 })
 
 router.post('/addProduct', function (req, res, next) {
-
-    connection.query(`insert into products(pname, price) values("${req.body.newProduct}", "${req.body.newPrice}")`, (err, rows, fields) => {
+    connection.query(`insert into products(pname, price) values("${req.body.newProduct}", "${req.body.newPrice}");`, (err, results, fields) => {
         if (err) {
             console.dir(err)
         }
-        console.dir(rows)
-        console.dir(fields)
-        res.redirect("products");
+        connection.query(`insert into store_products(sid,pid) values(${parseInt(req.body.storeid.replace("/", ""))},${results.insertId})`, (err, results, fields) => {
+            res.redirect("products");
+        })
     })
 })
 
