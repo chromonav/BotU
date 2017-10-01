@@ -40,17 +40,14 @@
                   </tr>
                 </thead>
                     <tbody>
-
                         {{#each data}}                  
-                              <tr class="data" href="/store-products/{{this.sid}}">      
-                                <td id="sid">{{this.sid}}</td>
-                                <td>{{this.sname}}</td>
+                              <tr class="data" >      
+                                <td id="sid"><a href={{this.href}}>{{this.sid}}</a></td>
+                                <td><a href={{this.href}}>{{this.sname}}</a></td>
                                 <td>{{this.address}}</td>                            
                               <form action="/deleteStore" method="POST"><td><button type="submit" name="delid" value={{this.sid}} class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" name="delete" value="delete" ><i class="fa fa-trash" aria-hidden="true"></i></button></td></form>    
-                              </tr>      
-                                                
+                              </tr>          
                         {{/each}}
-
                     </tbody>
             </table>
     </div>
