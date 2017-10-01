@@ -83,7 +83,6 @@ router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
-<<<<<<< HEAD
 router.post('/register', function(req, res, next) {
     var uname = req.body.uname;
     var fname = req.body.fname;
@@ -103,17 +102,6 @@ router.post('/register', function(req, res, next) {
            console.log(err);
        }
      })
-=======
-router.post('/signup', function (req, res, next) {
-    data = req.body;
-    connection.query(`add into user(username,password,email) values("${data.username}","${data.password}","${data.email}")`, function (err, rows, fields) {
-        if (err) {
-            res.send("err")
-        } else {
-            res.send("done")
-        }
-    })
->>>>>>> a933358bc1fe27305f735b8e12ed5331987ad482
 })
 
 router.post('/signin', function (req, res, next) {
