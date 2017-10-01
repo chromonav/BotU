@@ -148,10 +148,19 @@ router.get('/admin', ensureAuth, function (req, res) {
 var server = app.listen(port);
 
 
-router.get('/products', function (req, res) {
-    connection.query("select * from products", (err, rows, fiels) => {
-        res.render("products", { data: rows });
-    })
+router.get('/products/:id?', function (req, res ) {
+    var i = req.params.id;
+    if(!i) {
+        //code for all products 
+        connection.query("select * from products", (err, rows, fiels) => {
+            res.render("products", { data: rows });
+        })
+    } else {
+        //code for specific store-products
+        connection.query("select a.* from products a, store_products b where b.pid=a.pid and b.sid=?", i, (err, rows, fiels) => {
+            res.render("products", { data: rows });
+        })
+    }
 })
 
 router.post('/addProduct', function (req, res, next) {
@@ -173,6 +182,10 @@ router.get('/stores', function (req, res) {
         res.render("stores", { data: rows });
     })
 })
+router.get('/store-products/:id', function(req, res){
+   var i = req.params.id;
+
+})
 
 router.post('/addStore', function (req, res, next) {
     if (connection.query(`insert into stores(sname, address) values("${req.body.newStore}", "${req.body.newLocation}")`)) {
@@ -187,7 +200,7 @@ router.post('/deleteStore', function (req, res, next) {
         console.log("Error while deleting data product");
     }
 })
-
+ 
 const isAuth = function (details) {
     // console.dir(details)
     return new Promise(function (resolve, reject) {

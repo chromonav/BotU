@@ -64,3 +64,9 @@ $(document).ready(function() {
       }
   });
 });
+
+
+$(".data").click(function() {
+    console.log("/store-products/" + $("#sid").text());
+    $.get("/store-products/" + $("#sid").text());
+});
