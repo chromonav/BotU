@@ -5,7 +5,7 @@
   height: 632px;
   width: 250px;
   position: absolute;
-  top: 66px;
+  top: 68px;
   overflow-y: auto;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .unseen-side ul li {
-  height: 62px;
+  height: 60px;
   padding-top: 20px;
   padding-left: 10px;
   width: 100%;
@@ -64,7 +64,7 @@
   border: 0;
   background-color: #ffffff;
   height: calc(100% - 70px);
-  width: calc(100% - 253px);
+  width: calc(100% - 252px);
   border-radius: 10px;
 }
 
