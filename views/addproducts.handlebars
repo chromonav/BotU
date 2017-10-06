@@ -1,0 +1,18 @@
+ <div class="box Absolute-Center is-Responsive">
+
+    <form action="/addproduct" method="POST">
+      <div class="signup">Add New Product</div>
+        <input name="pname" class="input" type="text" placeholder="Product Name Here" required>
+        <input name="price" class="input" type="text" placeholder="Price" required>
+        {{!-- <input name="sname" class="input" type="text" placeholder="Store Name" required> --}}
+        <select class="select">
+             <option value="volvo">Volvo</option>  
+            {{#each data}}
+             <option value="{{this.sname}}">{{this.sname}}</option> 
+             {{/each}}
+        </select>
+        <button name="reg" class="btn1 reg">Add Product</button>
+    </form>
+
+  </div>
+

@@ -41,14 +41,14 @@ var bot = new RiveScript();
 bot.setSubroutine("say_hello", function (rs, args) {
     console.dir(args)
     return new bot.Promise(function (resolve, reject) {
-       connection.query(`select * from stores limit 1`,function(err,row,fields){
-           if(err){
-               console.dir(err)
-               reject("some error")
-           }
-           console.dir(row)
-           resolve(`${row[0].sname} located in ${row[0].address}`)
-       })
+        connection.query(`select * from stores limit 1`, function (err, row, fields) {
+            if (err) {
+                console.dir(err)
+                reject("some error")
+            }
+            console.dir(row)
+            resolve(`${row[0].sname} located in ${row[0].address}`)
+        })
     })
 })
 
@@ -91,7 +91,7 @@ router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
 
-router.post('/register', function(req, res, next) {
+router.post('/register', function (req, res, next) {
     var uname = req.body.uname;
     var fname = req.body.fname;
     var lname = req.body.lname;
@@ -99,23 +99,23 @@ router.post('/register', function(req, res, next) {
     var add = req.body.address;
     var epass = md5(req.body.pass);
 
-    var QUERY_STRING =`INSERT INTO user(username, password, fname, lname, address, mob) VALUES("${uname}","${epass}","${fname}","${lname}","${add}","${mob}");`
+    var QUERY_STRING = `INSERT INTO user(username, password, fname, lname, address, mob) VALUES("${uname}","${epass}","${fname}","${lname}","${add}","${mob}");`
 
-     connection.query(QUERY_STRING,function(err, rows, fields) {
-       if(!err){
-        console.log("Inserted new User");
-        res.redirect('/signin'); 
-       } else {
-           console.log("Error while registering user ");
-           console.log(err);
-       }
-     })
+    connection.query(QUERY_STRING, function (err, rows, fields) {
+        if (!err) {
+            console.log("Inserted new User");
+            res.redirect('/signin');
+        } else {
+            console.log("Error while registering user ");
+            console.log(err);
+        }
+    })
 })
 
 router.post('/signin', function (req, res, next) {
     console.dir(req.body)
     if (isAuth(req.body)) {
-        req.session.username = req.body.username; 
+        req.session.username = req.body.username;
         req.session.password = req.body.password;
         // console.dir(req.session)
         res.redirect('/')
@@ -132,9 +132,9 @@ router.get('/reply', ensureAuth, function (req, res, next) {
 
 
 router.get('/signout', function (req, res, next) {
-    req.session.destroy(function (err) {
+    req.session.destroy(function (err) { 
         if (err) {
-            console.log(err)
+            console.log(err) 
         } else {
             // console.log('logout')
             res.redirect('/')
@@ -149,14 +149,10 @@ var server = app.listen(port);
 
 
 
- 
 
-
- 
-
-router.get('/products/:id?', function (req, res ) {
+router.get('/products/:id?', function (req, res) {
     var i = req.params.id;
-    if(!i) {
+    if (!i) {
         //code for all products 
         connection.query("select * from products", (err, rows, fiels) => {
             res.render("products", { data: rows, canadd: true, storeid: 0 });
@@ -169,24 +165,31 @@ router.get('/products/:id?', function (req, res ) {
     }
 })
 
+router.get('/addproducts', function(req, res) {
+    connection.query("SELECT sname FROM stores", (err, rows, fields) => {
+        res.render("addproducts", {data: rows});
+    });
+    
+})
+
 router.post('/addProduct', function (req, res, next) {
     console.log("Store id = " + req.body.storeid);
     var storeid = req.body.storeid;
     var path = "products/" + storeid;
-    connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.newProduct}", "${req.body.newPrice}")`, function(err, rows, fields) {
-        if(err) {
+    connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.newProduct}", "${req.body.newPrice}")`, function (err, rows, fields) {
+        if (err) {
             console.log("Error while adding product in products table");
         } else {
             var sql = "select pid from products where pname='" + req.body.newProduct + "' and price=" + req.body.newPrice;
             console.log(sql);
-            connection.query(sql, function(err, rows, fields) {
-                if(err) {
+            connection.query(sql, function (err, rows, fields) {
+                if (err) {
                     console.log("Error while getting pid");
                 } else {
                     var pid = rows[0].pid;
                     console.log(pid);
-                    connection.query(`INSERT INTO store_products VALUES(?, ?)`, [storeid, pid], function(err, rows, fields) {
-                        if(err) {
+                    connection.query(`INSERT INTO store_products VALUES(?, ?)`, [storeid, pid], function (err, rows, fields) {
+                        if (err) {
                             console.log("Error while adding product in store_products table");
                         } else {
                             //console.log("Success");
@@ -203,14 +206,14 @@ router.post('/deleteProduct', function (req, res, next) {
     var storeid = req.body.storeid;
     var path = "products/" + storeid;
     console.log(path);
-    connection.query(`delete from store_products where pid="${req.body.delid}"`, function(err, rows, fields) {
-        if(!err){
-            connection.query(`DELETE FROM products WHERE pid="${req.body.delid}"`, function(err, rows, fields) {
-                if(!err) 
+    connection.query(`delete from store_products where pid="${req.body.delid}"`, function (err, rows, fields) {
+        if (!err) {
+            connection.query(`DELETE FROM products WHERE pid="${req.body.delid}"`, function (err, rows, fields) {
+                if (!err)
                     res.redirect(path);
-                else 
+                else
                     console.log("Error while deleting from products");
-            })            
+            })
         } else {
             console.log("Error while deleting data product");
         }
@@ -240,19 +243,19 @@ router.post('/deleteStore', function (req, res, next) {
         console.log("Error while deleting data product");
     }
 })
- 
+
 const isAuth = function (details) {
     // console.dir(details)
     return new Promise(function (resolve, reject) {
-         var epass = md5(details.password);
+        var epass = md5(details.password);
 
-        connection.query(`select * from user where username="${details.username}" and password="`+epass +`"`, function (err, rows, fields) {
+        connection.query(`select * from user where username="${details.username}" and password="` + epass + `"`, function (err, rows, fields) {
             if (err || rows.length < 1) {
                 console.dir(err);
                 reject(false)
             } else {
                 console.dir(rows)
-               // console.dir(fields)
+                // console.dir(fields)
                 resolve(true)
             }
         })
