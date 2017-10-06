@@ -167,9 +167,38 @@ router.get('/products/:id?', function (req, res) {
 
 router.get('/addproducts', function(req, res) {
     connection.query("SELECT sname FROM stores", (err, rows, fields) => {
-        res.render("addproducts", {data: rows});
+        res.render("addproducts", {data: rows, success: false});
     });
     
+})
+
+router.post('/addp', function(req, res, next) {
+    connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.newProduct}", "${req.body.newPrice}")`, function(err, rows, fields) {
+        if(err) {
+            console.log("Error while inseritng new product")
+            console.log(err);
+        } else {
+            var sql = "select pid from products where pname='" + req.body.newProduct + "' and price=" + req.body.newPrice;
+            var sql2 = "select sid from stores where sname='" + req.body.sname + "'";
+            connection.query(sql, function (err, rows, fields) {
+                var pid = rows[0].pid;
+                connection.query(sql2, function(err, rows, fields) {
+                    var storeid = rows[0].sid;
+                    connection.query(`INSERT INTO store_products VALUES(?, ?)`, [storeid, pid], function (err, rows, fields) {
+                        if (err) {
+                            console.log("Error while adding product in store_products table");
+                        } else {
+                            console.log("Success");
+                            connection.query("SELECT sname FROM stores", (err, rows, fields) => {
+                                res.render("addproducts", {data: rows, success: true});
+                            });
+                        }
+                    })
+                })
+                
+            })   
+        }
+    })
 })
 
 router.post('/addProduct', function (req, res, next) {

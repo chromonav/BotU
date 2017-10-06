@@ -305,3 +305,10 @@ h2 {
   color: #A9A9A9;
   font-size: 19px;
 }
+
+.isa_success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+  height: 30px;
+  border-radius: 1px; 
+}
