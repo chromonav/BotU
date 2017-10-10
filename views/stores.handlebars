@@ -12,33 +12,42 @@
            <form action="#" method="get" class="sear">
                <div class="input-group">
                      <input class="form-control" id="system-search" name="q" placeholder="Search for Store" required>
-                   <!-- <span class="input-group-btn">
-                       <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                   </span> -->
+                   </td>
+                   <td><span class="input-group-btn">
+			    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+		  </span>
+          </td> 
                </div>
            </form>
-         </td>
+         
        </div>
          </tr>
          </thead>
-              <thead>
+              <thead> 
                   <tr>
                       <th>Id</th>
-                      <th>Store</th>
+                      <th class="pname">Store</th>
                       <th>Location</th>
+                      <th>Delete</th>
                     </tr>
+                    <tr>
+                    <form action="/addStore" method="POST"> 
+                      <td style="padding-top:18px; font-size:18px">New</td>
+                      <td><input type="text" name="newStore" class="form-control" placeholder="New Store Name..."></td>
+                      <td><input type="text" name="newLocation" class="form-control" placeholder="Location..."></td>
+                      <td><button type="submit" name="add" value="add" class="btn btn-primary btn-xs"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                    </form>    
+                  </tr>
                 </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Reliance</td>
-                            <td>Kothrud</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Big Bazaar</td>
-                            <td>Pune</td>
-                        </tr>
+                        {{#each data}}                  
+                              <tr class="data" >      
+                                <td id="sid"><a href={{this.href}}>{{this.sid}}</a></td>
+                                <td><a href={{this.href}}>{{this.sname}}</a></td>
+                                <td>{{this.address}}</td>                            
+                              <form action="/deleteStore" method="POST"><td><button type="submit" name="delid" value={{this.sid}} class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" name="delete" value="delete" ><i class="fa fa-trash" aria-hidden="true"></i></button></td></form>    
+                              </tr>          
+                        {{/each}}
                     </tbody>
             </table>
     </div>

@@ -1,0 +1,21 @@
+ <div class="box Absolute-Center is-Responsive">
+
+    <form action="/addp" method="POST">
+      <div class="signup">Add New Product</div>
+        <input name="newProduct" class="input" type="text" placeholder="Product Name Here" required>
+        <input name="newPrice" class="input" type="number" placeholder="Price" required>
+        {{!-- <input name="sname" class="input" type="text" placeholder="Store Name" required> --}}
+        <select class="select" name="sname">
+             <option value="volvo">Volvo</option>  
+            {{#each data}}
+             <option value="{{this.sname}}">{{this.sname}}</option> 
+             {{/each}}
+        </select>
+        <button name="reg" class="btn1 reg">Add Product</button>
+        {{#if success}} 
+          <div class="isa_success"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp&nbspSucessfully added...</div>
+        {{/if}}
+    </form>
+    
+  </div>
+

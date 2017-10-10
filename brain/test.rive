@@ -234,12 +234,12 @@
 - I don't have a reply for that.
 - Try asking that a different way.
 
-+ where can i (get|find) *
-- <set item=<formal>>You can get <get item> from Reliance store, you may also get it in shanti store.
++ where can i (get|find) [to] *
+- <set item=<formal>>You can get <get item> <call>find_product_in_store</call>from Reliance store, you may also get it in shanti store.
 -<set item=<formal>>You can get <get item> from spencers store, you may also get it in Om vitthal  store.
 
-+ i want *
-- <set item=<formal>>sure you may get <get item> from Big Bazar.
++ i want [to] *
+- <set item=<formal>>sure you may get <get item> from <call>find_product_in_store <star> </call>.
 
 + what all items are available in * [store|shop]
 - <set store=<formal>> You can get the following items in <get store>.

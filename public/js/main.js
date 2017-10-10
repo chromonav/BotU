@@ -64,3 +64,13 @@ $(document).ready(function() {
       }
   });
 });
+
+
+$(".data").click(function() {
+    console.log("/store-products/" + $("#sid").text());
+    $.get("/store-products/" + $("#sid").text());
+});
+
+$(".input").click(function() {
+    $(".isa_success").css({ "display" : "none"});
+})

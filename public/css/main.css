@@ -290,3 +290,25 @@ h2 {
     background-color:#26ABE3;
   }
 }
+
+
+.select {
+  margin-top: 7px;
+  margin-bottom: -4px; 
+  width: 100%;
+  height: 35px;
+  border: none ;
+  background: #F7F7F7;
+  border-bottom: 2px solid  #B1AEAE;
+  border-radius: 2px;
+  padding-left: 15px;
+  color: #A9A9A9;
+  font-size: 19px;
+}
+
+.isa_success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+  height: 30px;
+  border-radius: 1px; 
+}

@@ -1,54 +1,67 @@
 <div class="container prodcontain">
- <div class="row">
+  <div class="row">
 
-  <div class="col-md-12">
-   <table class="prodtable table table-list-search">
-    <thead class="headrow">
-     <tr>
-      <div class="row">
-       <th id="heading" colspan="2">Products Available</th>
-       <!-- <td class="col-md-2"></td><td class="col-md-5"></td> -->
-       <td align="right" class="col-md-5">
-        <form action="#" method="get" class="sear">
-         <div class="input-group">
-          <input class="form-control" id="system-search" name="q" placeholder="Search for Product" required>
-          <!-- <span class="input-group-btn">
-											 <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-									 </span> -->
-         </div>
-        </form>
-       </td>
-      </div>
-     </tr>
-    </thead>
-    <thead>
-     <tr>
-      <th>Id</th>
-      <th>Product</th>
-      <th>Price</th>
-     </tr>
-    </thead>
-    <tbody>
-     <tr>
-      <td>1</td>
-      <td>Saop</td>
-      <td>Reliance Mall</td>
-     </tr>
-     <tr>
-      <td>2</td>
-      <td>Chocolate</td>
-      <td>Big Bazaar</td>
-     </tr>
+    <div class="col-md-12">
+      <table class="prodtable table table-list-search">
+        <thead class="headrow">
+          <tr>
+            <div class="row">
+              <th id="heading" colspan="2">Products Available</th>
+              <!-- <td class="col-md-2"></td><td class="col-md-5"></td> -->
+              <td align="right" class="col-md-5">
+                <form action="#" method="get" class="sear">
+                  <div class="input-group">
+                    <input class="form-control" id="system-search" name="q" placeholder="Search for Product" required>
+                    <td><span class="input-group-btn">
+			    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+		  </span>
+                    </td>
+                  </div>
+                </form>
 
-     {{#each data}}
-     <tr>
-      <td>{{this.pid}}</td>
-      <td>{{this.pname}}</td>
-      <td>{{this.price}}</td>
-     </tr>
-     {{/each}}
-    </tbody>
-   </table>
+              </td>
+
+            </div>
+          </tr>
+        </thead>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th class="pname">Products</th>
+            <th>Price</th>
+            <th>Delete</th>
+          </tr>
+
+        </thead>
+        <tbody>
+          {{#if canadd}}
+          <tr>
+            <form action="/addProduct" method="POST">
+              <td style="padding-top:18px; font-size:18px">New</td>
+              <td><input type="text" name="newProduct" class="form-control" placeholder="New Product Name..."></td>
+              <td><input type="text" name="newPrice" class="form-control" placeholder="Price..."></td>
+              <td><button type="submit" name="add" value="add" class="btn btn-primary btn-xs"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+              <input type="hidden" name="storeid" value={{storeid}}> </form>
+          </tr>
+          {{/if}} 
+          {{#each data}}
+          <tr class="data">
+            <td>{{this.pid}}</td>
+            <td>{{this.pname}}</td>
+            <td><i class="fa fa-inr" aria-hidden="true"></i>{{this.price}}</td>
+            <form action="/deleteProduct" method="POST">
+            <input type="hidden" name="storeid" value={{storeid}}>
+              <td><button type="submit" name="delid" value={{this.pid}} class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal"
+                  data-target="#delete" name="delete" value="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>     
+            </form>
+            </button>
+
+          </tr>
+          {{/each}}
+
+
+        </tbody>
+      </table>
+    </div>
   </div>
- </div>
 </div>

@@ -1,13 +1,17 @@
   <div class="box Absolute-Center is-Responsive">
 
-    <form>
+    <form action="/register" method="POST">
       <div class="signup">SignUp</div>
+        <input name="fname" class="input" type="text" placeholder="First Name" required>
+        <input name="lname" class="input" type="text" placeholder="Last Name" required>
+        <input name="uname" class="input" type="text" placeholder="Username" required>
+        <input name="pass" class="input" type="password" placeholder="Password" required>
+        <input name="address" class="input" type="text" placeholder="Address" required>
+        <input id="mob" name="mob" class="input" type="number" placeholder="Mobile No." required>
+        &nbsp &nbsp&nbsp&nbsp
+        <div class="for"><a href="/">Already registered Signin here</a></div>
+        <button name="reg" class="btn1 reg">Register</button>
+    </form>
 
-      <input class="input" type="text" placeholder="Full Name">
-      <input class="input" type="text" placeholder="Email">
-      <input class="input" type="password" placeholder="Password"> &nbsp&nbsp&nbsp&nbsp&nbsp
-
-
-      <div class="for"><a href="signin.html">Already registered Signin here</a></div>
-      <button class="btn1 reg">Register</button>
   </div>
+     

@@ -23,3 +23,15 @@
 .headrow {
   background-color: #d2d9df;
 }
+
+.pname {
+  width: 30%;
+}
+.data {
+  font-size: 17px;
+}
+
+.data:hover {
+  background-color: #EEF3F6;
+
+}
