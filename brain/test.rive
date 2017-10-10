@@ -191,7 +191,7 @@
 
 // Learn stuff about our users.
 
-+ my name is *
++ (my name is| i am) *
 - <set name=<formal>>Nice to meet you, <get name>.how can i assit you.
 - <set name=<formal>><get name>, nice to meet you. how can i help you
 
