@@ -42,12 +42,12 @@ bot.setSubroutine("find_product_in_store", function (rs, args) {
     console.dir(args)
     return new bot.Promise(function (resolve, reject) {
         connection.query(`select * from stores limit 1`, function (err, row, fields) {
-            if (err) {
-                console.dir(err)
-                reject("some error")
-            }
-            console.dir(row)
-            resolve(`${row[0].sname} located in ${row[0].address}`)
+                if (err) {
+                       console.dir(err)
+                       reject("some error")
+                        }
+              console.dir(row)
+              resolve(`${row[0].sname} located in ${row[0].address}`)
         })
     })
 })
@@ -155,7 +155,7 @@ router.get('/products/:id?', function (req, res) {
     if (!i) {
         //code for all products 
         connection.query("select * from products", (err, rows, fiels) => {
-            res.render("products", { data: rows, canadd: true, storeid: 0 });
+            res.render("products", { data: rows, canadd: false, storeid: 0 });
         })
     } else {
         //code for specific store-products
@@ -251,7 +251,14 @@ router.post('/deleteProduct', function (req, res, next) {
 
 router.get('/stores', function (req, res) {
     connection.query("select * from stores", (err, rows, fiels) => {
-        res.render("stores", { data: rows });
+        res.render("stores", {
+                     data: rows.map((row) => {
+                            console.dir(row)
+                            var el = row;
+                            el.href = `/products/${row.sid}`
+                            return el
+                        })
+                    });
     })
 })
 // router.get('/store-products/:id', function(req, res){
