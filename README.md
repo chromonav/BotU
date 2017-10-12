@@ -19,10 +19,17 @@ Run the server
 npm start
 ```
 
-database 
-C:\Program Files\MySQL\MySQL Server 5.5\bin\ >
+Database connection for windows
+```
+C:\Program Files\MySQL\MySQL Server 5.5\bin\
+```
+```
 mysql --host=35.201.179.83 --user=root --password
+```
+Select database
+```
 use project
+```
 
 Authors
 -----------
