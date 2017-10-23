@@ -262,3 +262,16 @@
 
 +test [calling] javascript
 -response from javascript: <call>say_hello</call>
+
++ i love you
+- me too 
+- I love you too, but I am bot.
+
++ who are you 
+- I am Ubot, You can chat with me and I will help you to get products you want.
+
++ who made you 
+- Saurabh Narhe, Chinmay Kulkarni & Rutwik Sardeshmukh made me to help people.
+
++ whats your age 
+- I am a Bot made in 2017

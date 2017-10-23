@@ -1,3 +1,4 @@
+
 <div class="box Absolute-Center is-Responsive">
     <form class="form-horizontal" action="/signin" method="post">
         <div class="signup">Sign In</div>
@@ -5,5 +6,10 @@
         <input class="input" type="password" name="password" placeholder="Password">
         <div class="for" style="margin-top:20px;"> <a href="/signup">Sign Up</a></div>
         <button class="btn1 reg">Login</button>
+        {{#if error}} 
+          <div class="isa_error"> <i class="fa fa-times-circle"></i>
+&nbsp&nbspWrong Username or Password </div>
+    {{/if}}
     </form>
+    
 </div>

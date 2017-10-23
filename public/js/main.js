@@ -74,3 +74,73 @@ $(".data").click(function() {
 $(".input").click(function() {
     $(".isa_success").css({ "display" : "none"});
 })
+
+$(".input").focus(function() {
+    $(this).css({
+        "border": "none",
+        "border-bottom": "2px solid #439EA2",
+        "outline": "none"
+    })
+})
+$(".input").focusout(function() {
+    $(this).css({
+        "border-bottom": "2px solid #B1AEAE",
+    })
+})
+
+
+    $("#registration_form").validate({
+        rules: {
+            fname : {
+                required: true,
+                minlength: 2,
+                lettersonly: true
+            },
+            lname: {
+                required: true,
+                minlength: 2,
+                lettersonly: true
+            },
+            uname: {
+                required: true
+            },
+            mob: {
+                required: true,
+                minlength: 9    
+            },
+
+            pass: {
+                required: true,
+                minlength: 6
+            },
+            address: {
+                required: true,
+            }
+        },
+        messages: {
+          mob: {
+            required: "We need your mobile number to contact you",
+            minlength: jQuery.validator.format("At least {0} characters required!")
+          },
+          fname : {
+            required : "Please enter your good-name",
+            minlength: "Enter valid name",
+            lettersonly: "Your name can't have numbers here"
+          },
+          lname : {
+            required : "Please enter your good-name",
+            minlength: "Enter valid name",
+            lettersonly: "Your name can't have numbers here"
+          },
+          pass: {
+              required: "Password can't be blank",
+              minlength: "Password should be atleast 6 character long"
+          },
+          address: {
+              required: "Address can't be blank"
+          },
+          uname: {
+              required: "Please choose some username"
+          }
+        }
+      });
