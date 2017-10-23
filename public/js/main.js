@@ -106,7 +106,8 @@ $(".input").focusout(function() {
             },
             mob: {
                 required: true,
-                minlength: 9    
+                minlength: 9 ,
+                maxlength: 9  
             },
 
             pass: {
@@ -120,7 +121,8 @@ $(".input").focusout(function() {
         messages: {
           mob: {
             required: "We need your mobile number to contact you",
-            minlength: jQuery.validator.format("At least {0} characters required!")
+            minlength: jQuery.validator.format("At least {0} characters required!"),
+            maxlength: "You can't enter more than 10 digits"
           },
           fname : {
             required : "Please enter your good-name",
