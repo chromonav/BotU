@@ -9,6 +9,8 @@ var express = require('express')
     , router = express.Router()
     , moment = require("moment");
 var google = require("google")
+var cookieParser = require('cookie-parser')
+
 var md5 = require('md5');
 
 google.resultsPerPage = 5
@@ -70,6 +72,7 @@ bot.loadFile("brain/test.rive", (batch_num) => {
 /* ROUTE STUFF */
 app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser())
 app.use(methodOverride());                  // simulate DELETE and PUT
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
