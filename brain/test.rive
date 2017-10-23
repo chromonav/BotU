@@ -192,16 +192,14 @@
 // Learn stuff about our users.
 
 + (my name is| i am) *
-- <set name=<formal>>Nice to meet you, <get name>.how can i assit you.
-- <set name=<formal>><get name>, nice to meet you. how can i help you
-
+- <call>say_hello</call>
 
 
 + my (mom|dad|mother|father|bro|brother|sis|sister|cousin|aunt|uncle) wants *
-- <set sau=<formal>>Your relative can get<get sau> at
+- Your relative can get<get sau> at
 
 + can you find where *
-- <set chin=<formal>>yes ,we have <get chin> in the following stores
+- yes ,we have < star> in the following stores
 + can i *
 - Whether or not you can <star> depends on you more than on me.
 - Do you want to be able to <star>?
@@ -210,10 +208,10 @@
 
 
 + do you have  *
-- <set rut=<formal>>Yes , you can find<get rut> it in all the nearest retail stores
+-Yes , you can find<get rut> it in all the nearest retail stores
 
 + why can not i find *
--<set thing=<formal>> No, you will surely find<get thing> it in the Mega Mart.
+-<set thing=<star>> No, you will surely find <get star> it in the Mega Mart.
 
 
 + [*] (fuck|fucker|shit|damn|shut up|bitch) [*]

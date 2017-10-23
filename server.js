@@ -8,9 +8,10 @@ var express = require('express')
     , port = process.env.PORT || 8000
     , router = express.Router()
     , moment = require("moment");
-
+var google = require("google")
 var md5 = require('md5');
 
+google.resultsPerPage = 5
 // mysql connection
 var mysql = require('mysql');
 var connection = mysql.createConnection({
@@ -41,14 +42,19 @@ var bot = new RiveScript();
 bot.setSubroutine("say_hello", function (rs, args) {
     console.dir(args)
     return new bot.Promise(function (resolve, reject) {
-        connection.query(`select * from stores limit 1`, function (err, row, fields) {
-            if (err) {
-                console.dir(err)
-                reject("some error")
-            }
-            console.dir(row)
-            resolve(`${row[0].sname} located in ${row[0].address}`)
-        })
+        connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where p.pname="s
+        ugar";`, function (err, row, fields) {
+                if (err) {
+                    console.dir(err)
+                    reject("some error")
+                }
+                console.dir(row)
+                if (row.length == 0) {
+                    reject("NO RESULT")
+                }
+                resolve("hello")
+                // resolve(`${row[0].sname} located in ${row[0].address}`)
+            })
     })
 })
 
@@ -69,8 +75,10 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.use(session({
     secret: '016F9D5F268654BB20B1691BFFAFBC88B0EC6DC8A1318B314D467AC84A489056',
-    resave: false,
-    saveUninitialized: true
+    resave: true,
+    saveUninitialized: true,
+    proxy: true,
+    resave: true,
 }));
 
 app.use('/', router);
@@ -79,7 +87,7 @@ app.use(function (req, res, next) {
     res.status(404).render("404")
 })
 
-router.get('/', ensureAuth, function (req, res, next) {
+router.get('/', function (req, res, next) {
     res.render('index', { isSession: req.session.username ? true : false });
 });
 
@@ -132,9 +140,9 @@ router.get('/reply', ensureAuth, function (req, res, next) {
 
 
 router.get('/signout', function (req, res, next) {
-    req.session.destroy(function (err) { 
+    req.session.destroy(function (err) {
         if (err) {
-            console.log(err) 
+            console.log(err)
         } else {
             // console.log('logout')
             res.redirect('/')
@@ -165,16 +173,16 @@ router.get('/products/:id?', function (req, res) {
     }
 })
 
-router.get('/addproducts', function(req, res) {
+router.get('/addproducts', function (req, res) {
     connection.query("SELECT sname FROM stores", (err, rows, fields) => {
-        res.render("addproducts", {data: rows, success: false});
+        res.render("addproducts", { data: rows, success: false });
     });
-    
+
 })
 
-router.post('/addp', function(req, res, next) {
-    connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.newProduct}", "${req.body.newPrice}")`, function(err, rows, fields) {
-        if(err) {
+router.post('/addp', function (req, res, next) {
+    connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.newProduct}", "${req.body.newPrice}")`, function (err, rows, fields) {
+        if (err) {
             console.log("Error while inseritng new product")
             console.log(err);
         } else {
@@ -182,7 +190,7 @@ router.post('/addp', function(req, res, next) {
             var sql2 = "select sid from stores where sname='" + req.body.sname + "'";
             connection.query(sql, function (err, rows, fields) {
                 var pid = rows[0].pid;
-                connection.query(sql2, function(err, rows, fields) {
+                connection.query(sql2, function (err, rows, fields) {
                     var storeid = rows[0].sid;
                     connection.query(`INSERT INTO store_products VALUES(?, ?)`, [storeid, pid], function (err, rows, fields) {
                         if (err) {
@@ -190,13 +198,13 @@ router.post('/addp', function(req, res, next) {
                         } else {
                             console.log("Success");
                             connection.query("SELECT sname FROM stores", (err, rows, fields) => {
-                                res.render("addproducts", {data: rows, success: true});
+                                res.render("addproducts", { data: rows, success: true });
                             });
                         }
                     })
                 })
-                
-            })   
+
+            })
         }
     })
 })
@@ -304,17 +312,67 @@ function ensureAuth(req, res, next) {
 }
 
 var io = require('socket.io').listen(server);
+var SessionSockets = require('session.socket.io'),
+sessionSockets = new SessionSockets(io, session, cookieParser);
+sessionSockets.on('connection', function (socket) {
+    // google("flower near kothrud", function (err, res) {
 
-io.on('connection', function (socket) {
-    // socket.emit("chat_reply", { text: "helloe" })
+    //     var search_res = "";
+    //     res.links.map(function (link, val) {
+    //         if(link.link){
+    //             search_res = search_res + `<ul>
+    //             <a href="${link.link}"><li>
+    //             <p>${link.title}</p>
+    //             <p>${link.description}</p>
+    //             </li></a>
+    //         </ul>`
+    //         }
+
+    //     })
+    //     socket.emit("chat_reply", {
+    //         text: `<p>
+    //     We could not find resluts in our database. Here are google search results: 
+    //     </p><br/> ${search_res}
+    //    ` })
+
+    //     console.dir(res.links)
+    // })
+    console.dir(Object.keys())
+    socket.emit("chat_reply", { text: "Hello Sir, I am Ubot. What is your name?" })
     socket.on("client_message", function (data) {
-
+        console.dir(data)
         bot.replyAsync("local-user", data.text, this, function (error, reply) {
             if (!error) {
                 socket.emit("chat_reply", { text: reply })
+
                 // connection.query(`insert into question()`)
                 // you can use reply here
             } else {
+                if (error = "NO RESULT") {
+
+                    google(`${data.text}`, function (err, res) {
+
+                        var search_res = "";
+                        res.links.map(function (link, val) {
+                            if (link.link) {
+                                search_res = search_res + `<ul>
+                <a href="${link.link}"><li>
+                <p>${link.title}</p>
+                <p>${link.description}</p>
+                </li></a>
+            </ul>`
+                            }
+
+                        })
+                        socket.emit("chat_reply", {
+                            text: `<p>
+        We could not find resluts in our database. Here are google search results: 
+        </p><br/> ${search_res}
+       ` })
+
+                        console.dir(res.links)
+                    })
+                }
                 socket.emit("chat_reply", { text: error })
 
             }
