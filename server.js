@@ -42,7 +42,6 @@ var bot = new RiveScript();
 bot.setSubroutine("find_product_in_store", function (rs, args) {
     console.dir(args)
     return new bot.Promise(function (resolve, reject) {
-<<<<<<< HEAD
         connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where p.pname="s
         ugar";`, function (err, row, fields) {
                 if (err) {
@@ -56,16 +55,6 @@ bot.setSubroutine("find_product_in_store", function (rs, args) {
                 resolve("hello")
                 // resolve(`${row[0].sname} located in ${row[0].address}`)
             })
-=======
-        connection.query(`select * from stores limit 1`, function (err, row, fields) {
-                if (err) {
-                       console.dir(err)
-                       reject("some error")
-                        }
-              console.dir(row)
-              resolve(`${row[0].sname} located in ${row[0].address}`)
-        })
->>>>>>> d4bfa8d403cac2b9bc3d27281944662701e9cbd5
     })
 })
 
