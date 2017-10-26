@@ -30,16 +30,6 @@ function send_message() {
 }
 $(document).ready(function () {
 
-    $(".messages").append(`
-        
-        <li class="message left appeared">
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-                <div class="text">Hello Sir! I am your store keeper.<br/>What is your name?</div>
-            </div>
-        </li>
-    `)
-
     $('.send_message').click(function () {
         send_message()
         $(".messages").animate({ scrollTop: $(".messages").prop('scrollHeight') }, 300);

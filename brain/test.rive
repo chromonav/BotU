@@ -194,7 +194,7 @@
 + (my name is| i am) *
 - <call>my_name<star2></call>
 
-+ i live [at|in] *
++ i am [at|in] *
 - <call>my_loc <star></call>
 
 + my (mom|dad|mother|father|bro|brother|sis|sister|cousin|aunt|uncle) wants *

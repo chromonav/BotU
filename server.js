@@ -76,7 +76,15 @@ app.use(function (req, res, next) {
 })
 
 router.get('/',ensureAuth("user"), function (req, res, next) {
-    res.render('index', { type: req.session.type });
+    connection.query(`SELECT fname FROM user WHERE username="${req.session.username}"`, function(err, rows, fields) {
+        if(err) {
+            console.dir(err)
+        } else {
+            req.session.name = rows[0]['fname'];
+            res.render('index', { type: req.session.type, name: req.session.name });
+        }
+    })
+   
 });
 
 router.get('/signin', function (req, res, next) {
@@ -139,11 +147,7 @@ router.post('/signin', function (req, res, next) {
 })
 
 router.post('/reply', ensureAuth('user'), function (req, res, next) {
-    bot.setSubroutine("my_name", function (rs, args) {
-        console.dir(args)
-        req.session.name = args[0];
-        return `hello ${args[0]}\n Where do you live?`
-    })
+   
     bot.setSubroutine("my_loc", function (rs, args) {
         console.dir(args)
         req.session.location = args[0];
