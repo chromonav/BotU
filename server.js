@@ -76,16 +76,16 @@ app.use(function (req, res, next) {
     res.status(404).render("404")
 })
 
-router.get('/',ensureAuth("user"), function (req, res, next) {
-    connection.query(`SELECT fname FROM user WHERE username="${req.session.username}"`, function(err, rows, fields) {
-        if(err) {
+router.get('/', ensureAuth("user"), function (req, res, next) {
+    connection.query(`SELECT fname FROM user WHERE username="${req.session.username}"`, function (err, rows, fields) {
+        if (err) {
             console.dir(err)
         } else {
             req.session.name = rows[0]['fname'];
             res.render('index', { type: req.session.type, name: req.session.name });
         }
     })
-   
+
 });
 
 router.get('/signin', function (req, res, next) {
@@ -96,7 +96,7 @@ router.get('/admin', function (req, res) {
     res.render('adminlogin');
 })
 
-router.post('/admin',ensureAuth("post"), function (req, res, next) {
+router.post('/admin', ensureAuth("post"), function (req, res, next) {
     console.dir(req.body)
     if (isAuth({ username: req.body.username, password: req.body.password, type: "admin" })) {
         req.session.username = req.body.username;
@@ -148,7 +148,7 @@ router.post('/signin', function (req, res, next) {
 })
 
 router.post('/reply', ensureAuth('user'), function (req, res, next) {
-   
+
     bot.setSubroutine("my_loc", function (rs, args) {
         console.dir(args)
         req.session.location = args[0];
@@ -187,8 +187,8 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
                     reject("NO RESULT")
                 } else {
                     productsdata = ""
-                    for(var i = 0; i<row.length;i++){
-                        productsdata  = productsdata + `<br/>${row[i].pname} : Rs. ${row[i].price}`
+                    for (var i = 0; i < row.length; i++) {
+                        productsdata = productsdata + `<br/>${row[i].pname} : Rs. ${row[i].price}`
                     }
                     resolve(` <br/> Following are the products available <br/> ${productsdata}`)
                 }
@@ -197,7 +197,7 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
         })
     })
 
-   
+
     // console.dir(req.body)
     bot.replyAsync(req.cookies.name ? req.cookies.name : "new-user", req.body.message, this, function (error, reply) {
         // console.dir(reply)
@@ -396,7 +396,12 @@ router.post('/deleteStore', ensureAuth('admin'), function (req, res, next) {
 const isAuth = function (details) {
     // console.dir(details)
     return new Promise(function (resolve, reject) {
-        var epass = md5(details.password);
+        if (details.type == 'user') {
+            var epass = md5(details.password);
+
+        }else{
+            epass = details.password;
+        }
         connection.query(`select * from ${details.type} where username="${details.username}" and password="` + epass + `"`, function (err, rows, fields) {
             if (err || rows.length < 1) {
                 console.dir(err);

@@ -1,10 +1,9 @@
 <nav class="navbar navbar-light bg-light">
     <ul class="nav">
-        <li>  <a class="navbar-brand" href="/">
+        <li> <a class="navbar-brand" href="/">
             <img src="/images/chatbot.png" class="d-inline-block align-top" alt="">UBot 
             </a>
-        </li>&nbsp&nbsp&nbsp      
-   {{#if type}}
+        </li>&nbsp&nbsp&nbsp {{#if type}}
         <li class="nav-item hvr-underline-from-center">
             <a class="nav-link " href="/products">Products</a>
         </li>
@@ -14,39 +13,35 @@
         <li class="nav-item hvr-underline-from-center">
             <a class="nav-link " href="#">Chats</a>
         </li>
-    {{/if}}
+        {{/if}}
     </ul>
 
 
-      
-        
-        {{#if type}}  
-         
-          <span>
+
+
+    {{#if type}}
+
+    <span>
               <a href="/signout"><button class="btn btn-default btn-lg">Logout</button></a>
-          </span>
-
-      {{else}}
-          <span>
+          </span> {{else}}
+    <span>
               <a href="/signin"><button class="btn btn-default btn-lg">Signin</button></a>
-          </span>
+          </span> {{/if}}
 
-      {{/if}}
+    </div>
 
-  </div>
+    <button class="tog" onclick="tog()">&#9776;</button> {{#if isSession}}
 
-  <button class="tog" onclick="tog()">&#9776;</button> {{#if isSession}}
+    <div class="hid" id="na">
+        <br>
+        <div class="ah"><a href="/signout"><button href="/signout">Logout</button></a></div>
+    </div>
 
-  <div class="hid" id="na">
-    <br>
-    <div class="ah"><a href="/signout"><button href="/signout">Logout</button></a></div>
-  </div>
+    {{else}}
 
-  {{else}}
-
-  <div class="hid" id="na">
-    <br>
-    <div class="ah"><a href="/signin"><button >Signin</button></a></div>
-  </div>
-  {{/if}}
+    <div class="hid" id="na">
+        <br>
+        <div class="ah"><a href="/signin"><button >Signin</button></a></div>
+    </div>
+    {{/if}}
 </nav>
