@@ -43,7 +43,20 @@ const RiveScript = require("rivescript")
 var bot = new RiveScript();
 
 
-
+function totype(type) {
+    if (type == "user") {
+        return {
+            user: true,
+            admin: false
+        }
+    }
+    if (type == "admin") {
+        return {
+            user: false,
+            admin: true
+        }
+    }
+}
 
 
 bot.loadFile("brain/test.rive", (batch_num) => {
@@ -82,28 +95,28 @@ router.get('/',ensureAuth("user"), function (req, res, next) {
             console.dir(err)
         } else {
             req.session.name = rows[0]['fname'];
-            res.render('index', { type: req.session.type, name: req.session.name });
+            res.render('index', { type: totype(req.session.type), name: req.session.name });
         }
     })
    
 });
 
 router.get('/signin', function (req, res, next) {
-    res.render('signin', { type: req.session.type });
+    res.render('signin');
 });
 
 router.get('/admin', function (req, res) {
     res.render('adminlogin');
 })
 
-router.post('/admin',ensureAuth("post"), function (req, res, next) {
+router.post('/adminlogin', function (req, res, next) {
     console.dir(req.body)
     if (isAuth({ username: req.body.username, password: req.body.password, type: "admin" })) {
         req.session.username = req.body.username;
         req.session.password = req.body.password;
         req.session.type = 'admin'
         // console.dir(req.session)
-        res.redirect('/')
+        res.redirect('/products')
     } else {
         res.render('signin', { error: "Wrong Username or Password" })
     }
@@ -136,7 +149,7 @@ router.post('/register', function (req, res, next) {
 
 router.post('/signin', function (req, res, next) {
     console.dir(req.body)
-    if (isAuth(req.body)) {
+    if (isAuth({username:req.body.username,password:req.body.password,type:"user"})) {
         req.session.username = req.body.username;
         req.session.password = req.body.password;
         req.session.type = 'user'
@@ -249,6 +262,7 @@ router.get('/signout', function (req, res, next) {
             console.log(err)
         } else {
             // console.log('logout')
+            delete req.session;
             res.redirect('/')
         }
     })
@@ -260,7 +274,7 @@ router.get('/products/:id?', ensureAuth('admin'), function (req, res) {
     if (!i) {
         //code for all products 
         connection.query("select * from products", (err, rows, fiels) => {
-            res.render("products", { data: rows, canadd: false, storeid: 0 });
+            res.render("products", {type: totype(req.session.type), data: rows, canadd: false, storeid: 0 });
         })
     } else {
         //code for specific store-products
@@ -273,7 +287,7 @@ router.get('/products/:id?', ensureAuth('admin'), function (req, res) {
                     console.dir(MAINerr)
                     res.render('404', { url: req.url });
                 } else {
-                    res.render("products", { storename: fields[0].sname, data: MAINrows, canadd: true, storeid: i });
+                    res.render("products", {type: totype(req.session.type), storename: fields[0].sname, data: MAINrows, canadd: true, storeid: i });
                 }
             })
         })
@@ -282,7 +296,7 @@ router.get('/products/:id?', ensureAuth('admin'), function (req, res) {
 
 router.get('/addproducts', ensureAuth('admin'), function (req, res) {
     connection.query("SELECT sname FROM stores", (err, rows, fields) => {
-        res.render("addproducts", { data: rows, success: false });
+        res.render("addproducts", {type: totype(req.session.type), data: rows, success: false });
     });
 
 })
@@ -367,6 +381,7 @@ router.post('/deleteProduct', ensureAuth('admin'), function (req, res, next) {
 router.get('/stores', ensureAuth('admin'), function (req, res) {
     connection.query("select * from stores", (err, rows, fiels) => {
         res.render("stores", {
+            type: totype(req.session.type),
             data: rows.map((row) => {
                 console.dir(row)
                 var el = row;
@@ -394,10 +409,17 @@ router.post('/deleteStore', ensureAuth('admin'), function (req, res, next) {
 
 
 const isAuth = function (details) {
-    // console.dir(details)
+    console.dir("details")
+    console.dir(details.type)
     return new Promise(function (resolve, reject) {
-        var epass = md5(details.password);
+        if (details.type == 'user') {
+            var epass = md5(details.password);
+        } else {
+            epass = details.password;
+        }
         connection.query(`select * from ${details.type} where username="${details.username}" and password="` + epass + `"`, function (err, rows, fields) {
+            console.dir(rows)
+            console.dir(fields)
             if (err || rows.length < 1) {
                 console.dir(err);
                 reject(false)
@@ -409,6 +431,7 @@ const isAuth = function (details) {
         })
     })
 }
+
 function ensureAuth(type) {
     return function (req, res, next) {
         if (req.session.username) {
