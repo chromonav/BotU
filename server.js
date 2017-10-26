@@ -83,12 +83,21 @@ router.get('/signin', function (req, res, next) {
     res.render('signin', { isSession: req.session.username ? true : false });
 });
 
-router.get('/admin', function(req, res) {
+router.get('/admin', function (req, res) {
     res.render('adminlogin');
 })
 
-router.post('/adminlogin', function(req, res, next) {
-
+router.post('/admin', function (req, res, next) {
+    console.dir(req.body)
+    if (isAuth(username:req.body.username, password:req.body.password, type:"admin")) {
+        req.session.username = req.body.username;
+        req.session.password = req.body.password;
+        req.session.type = 'user'
+        // console.dir(req.session)
+        res.redirect('/')
+    } else {
+        res.render('signin', { error: "Wrong Username or Password" })
+    }
 })
 
 router.get('/signup', function (req, res, next) {
@@ -121,6 +130,7 @@ router.post('/signin', function (req, res, next) {
     if (isAuth(req.body)) {
         req.session.username = req.body.username;
         req.session.password = req.body.password;
+        req.session.type = 'user'
         // console.dir(req.session)
         res.redirect('/')
     } else {
@@ -128,7 +138,7 @@ router.post('/signin', function (req, res, next) {
     }
 })
 
-router.post('/reply', function (req, res, next) {
+router.post('/reply', ensureAuth('user'), function (req, res, next) {
     bot.setSubroutine("my_name", function (rs, args) {
         console.dir(args)
         res.cookie("name", args[0])
@@ -217,15 +227,9 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-router.get('/admin', ensureAuth, function (req, res) {
-    res.render("admin", { isSession: req.session.username ? true : false });
-})
 var server = app.listen(port);
 
-
-
-
-router.get('/products/:id?', function (req, res) {
+router.get('/products/:id?', ensureAuth('admin'), function (req, res) {
     var i = req.params.id;
     if (!i) {
         //code for all products 
@@ -250,14 +254,14 @@ router.get('/products/:id?', function (req, res) {
     }
 })
 
-router.get('/addproducts', function (req, res) {
+router.get('/addproducts', ensureAuth('admin'), function (req, res) {
     connection.query("SELECT sname FROM stores", (err, rows, fields) => {
         res.render("addproducts", { data: rows, success: false });
     });
 
 })
 
-router.post('/addp', function (req, res, next) {
+router.post('/addp', ensureAuth('admin'), function (req, res, next) {
     connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.newProduct}", "${req.body.newPrice}")`, function (err, rows, fields) {
         if (err) {
             console.log("Error while inseritng new product")
@@ -286,7 +290,7 @@ router.post('/addp', function (req, res, next) {
     })
 })
 
-router.post('/addProduct', function (req, res, next) {
+router.post('/addProduct', ensureAuth('admin'), function (req, res, next) {
     console.log("Store id = " + req.body.storeid);
     var storeid = req.body.storeid;
     var path = "products/" + storeid;
@@ -316,7 +320,7 @@ router.post('/addProduct', function (req, res, next) {
     })
 })
 
-router.post('/deleteProduct', function (req, res, next) {
+router.post('/deleteProduct', ensureAuth('admin'), function (req, res, next) {
     var storeid = req.body.storeid;
     var path = "products/" + storeid;
     console.log(path);
@@ -334,7 +338,7 @@ router.post('/deleteProduct', function (req, res, next) {
     })
 })
 
-router.get('/stores', function (req, res) {
+router.get('/stores', ensureAuth('admin'), function (req, res) {
     connection.query("select * from stores", (err, rows, fiels) => {
         res.render("stores", {
             data: rows.map((row) => {
@@ -347,13 +351,13 @@ router.get('/stores', function (req, res) {
     })
 })
 
-router.post('/addStore', function (req, res, next) {
+router.post('/addStore', ensureAuth('admin'), function (req, res, next) {
     if (connection.query(`insert into stores(sname, address) values("${req.body.newStore}", "${req.body.newLocation}")`)) {
         res.redirect("stores");
     }
 })
 
-router.post('/deleteStore', function (req, res, next) {
+router.post('/deleteStore', ensureAuth('admin'), function (req, res, next) {
     if (connection.query(`delete from stores where sid="${req.body.delid}"`)) {
         res.redirect('stores');
     } else {
@@ -365,8 +369,7 @@ const isAuth = function (details) {
     // console.dir(details)
     return new Promise(function (resolve, reject) {
         var epass = md5(details.password);
-
-        connection.query(`select * from user where username="${details.username}" and password="` + epass + `"`, function (err, rows, fields) {
+        connection.query(`select * from ${details.type} where username="${details.username}" and password="` + epass + `"`, function (err, rows, fields) {
             if (err || rows.length < 1) {
                 console.dir(err);
                 reject(false)
@@ -378,85 +381,16 @@ const isAuth = function (details) {
         })
     })
 }
-
-function ensureAuth(req, res, next) {
-    if (req.session.username) {
-        isAuth({ username: req.session.username, password: req.session.password }).then(function () {
-            next()
-        }).catch(function () {
+function ensureAuth(type) {
+    return function (req, res, next) {
+        if (req.session.username) {
+            isAuth({ username: req.session.username, password: req.session.password, type: type }).then(function () {
+                next()
+            }).catch(function () {
+                res.redirect('/signin')
+            })
+        } else {
             res.redirect('/signin')
-        })
-    } else {
-        res.redirect('/signin')
+        }
     }
 }
-
-var io = require('socket.io').listen(server);
-var SessionSockets = require('session.socket.io'),
-    sessionSockets = new SessionSockets(io, session, cookieParser);
-sessionSockets.on('connection', function (socket) {
-    // google("flower near kothrud", function (err, res) {
-
-    //     var search_res = "";
-    //     res.links.map(function (link, val) {
-    //         if(link.link){
-    //             search_res = search_res + `<ul>
-    //             <a href="${link.link}"><li>
-    //             <p>${link.title}</p>
-    //             <p>${link.description}</p>
-    //             </li></a>
-    //         </ul>`
-    //         }
-
-    //     })
-    //     socket.emit("chat_reply", {
-    //         text: `<p>
-    //     We could not find resluts in our database. Here are google search results: 
-    //     </p><br/> ${search_res}
-    //    ` })
-
-    //     console.dir(res.links)
-    // })
-    console.dir(Object.keys())
-    socket.emit("chat_reply", { text: "Hello Sir, I am Ubot. What is your name?" })
-    socket.on("client_message", function (data) {
-        console.dir(data)
-        bot.replyAsync("local-user", data.text, this, function (error, reply) {
-            if (!error) {
-                socket.emit("chat_reply", { text: reply })
-
-                // connection.query(`insert into question()`)
-                // you can use reply here
-            } else {
-                if (error = "NO RESULT") {
-
-                    google(`${data.text}`, function (err, res) {
-
-                        var search_res = "";
-                        res.links.map(function (link, val) {
-                            if (link.link) {
-                                search_res = search_res + `<ul>
-                <a href="${link.link}"><li>
-                <p>${link.title}</p>
-                <p>${link.description}</p>
-                </li></a>
-            </ul>`
-                            }
-
-                        })
-                        socket.emit("chat_reply", {
-                            text: `<p>
-        We could not find resluts in our database. Here are google search results: 
-        </p><br/> ${search_res}
-       ` })
-
-                        console.dir(res.links)
-                    })
-                }
-                socket.emit("chat_reply", { text: error })
-
-            }
-        });
-
-    })
-})
