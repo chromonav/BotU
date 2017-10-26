@@ -41,24 +41,9 @@ const _ = require("lodash")
 const RiveScript = require("rivescript")
 var bot = new RiveScript();
 
-bot.setSubroutine("find_product_in_store", function (rs, args) {
-    console.dir(args)
-    return new bot.Promise(function (resolve, reject) {
-        connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where p.pname="s
-        ugar";`, function (err, row, fields) {
-                if (err) {
-                    console.dir(err)
-                    reject("some error")
-                }
-                console.dir(row)
-                if (row.length == 0) {
-                    reject("NO RESULT")
-                }
-                resolve("hello")
-                // resolve(`${row[0].sname} located in ${row[0].address}`)
-            })
-    })
-})
+
+
+
 
 bot.loadFile("brain/test.rive", (batch_num) => {
     console.log("Batch #" + batch_num + " has finished loading!");
@@ -135,10 +120,81 @@ router.post('/signin', function (req, res, next) {
     }
 })
 
-router.get('/reply', ensureAuth, function (req, res, next) {
+router.post('/reply', function (req, res, next) {
+    bot.setSubroutine("my_name", function (rs, args) {
+        console.dir(args)
+        res.cookie("name", args[0])
+        return `hello ${args[0]}\n Where do you live?`
+    })
+    bot.setSubroutine("my_loc", function (rs, args) {
+        console.dir(args)
+        res.cookie("location", args[0])
+        return `Great!\n How can i help you?`
+    })
 
-    var reply = bot.reply("local-user", "Hello, bot!");
-    res.send(reply)
+    bot.setSubroutine("find_product_in_store", function (rs, args) {
+        console.dir(args)
+        return new bot.Promise(function (resolve, reject) {
+            connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where p.pname="${args[0]}";`, function (err, row, fields) {
+                if (err) {
+                    console.dir(err)
+                    reject("some error")
+                }
+                console.dir(row.length)
+                if (row.length == 0) {
+                    reject("NO RESULT")
+                } else {
+                    resolve(`${row[0].sname}.<br\> It is near ${row[0].address} <br\>It's price is ${row[0].price}`)
+                }
+                // resolve(`${row[0].sname} located in ${row[0].address}`)
+            })
+        })
+    })
+
+    // console.dir(req.body)
+    bot.replyAsync(req.cookies.name ? req.cookies.name : "new-user", req.body.message, this, function (error, reply) {
+        // console.dir(reply)
+        if (error) {
+            if (error == "NO RESULT") {
+                //         res.send()
+                // res.send("no result")
+                google(`${req.body.message} near ${req.cookies.location}`, function (err, results) {
+                    var search_res = "";
+                    results.links.map(function (link, val) {
+                        if (link.link) {
+                            search_res = search_res + `<ul>
+                    <a href="${link.link}"><li>
+                    <p>${link.title}</p>
+                    <p>${link.description}</p>
+                    </li></a>
+                </ul>`
+                        }
+                    })
+
+                    console.dir(search_res)
+                    res.send(`<p>
+                    We could not find resluts in our database. Here are google search results: 
+                    </p><br/> ${search_res}
+                    `)
+                })
+
+
+
+            } else {
+                console.dir("Error");
+                console.dir(req.body)
+                console.dir(req.cookies.name)
+            }
+        } else {
+            res.send(reply)
+            if (req.cookies.name) {
+                var query = `insert into conversation(status,user,message,reply) values(${1},"${req.cookies.name}","${req.body.message}","${reply}")`
+                connection.query(query, function (err, row, fields) {
+                    console.dir(err)
+                })
+            }
+        }
+    })
 })
 
 
@@ -170,8 +226,18 @@ router.get('/products/:id?', function (req, res) {
         })
     } else {
         //code for specific store-products
-        connection.query("select a.* from products a, store_products b where b.pid=a.pid and b.sid=?", i, (err, rows, fiels) => {
-            res.render("products", { data: rows, canadd: true, storeid: i });
+        console.dir(parseInt(i))
+
+        connection.query("select a.* from products a, store_products b where b.pid=a.pid and b.sid=?", i, (MAINerr, MAINrows, MAINfields) => {
+            connection.query(`select * from stores where sid=?`, parseInt(i), function (err, rows, fields) {
+                if (err || MAINerr) {
+                    console.dir(err)
+                    console.dir(MAINerr)
+                    res.render('404', { url: req.url });
+                } else {
+                    res.render("products", { storename: fields[0].sname, data: MAINrows, canadd: true, storeid: i });
+                }
+            })
         })
     }
 })
@@ -263,13 +329,13 @@ router.post('/deleteProduct', function (req, res, next) {
 router.get('/stores', function (req, res) {
     connection.query("select * from stores", (err, rows, fiels) => {
         res.render("stores", {
-                     data: rows.map((row) => {
-                            console.dir(row)
-                            var el = row;
-                            el.href = `/products/${row.sid}`
-                            return el
-                        })
-                    });
+            data: rows.map((row) => {
+                console.dir(row)
+                var el = row;
+                el.href = `/products/${row.sid}`
+                return el
+            })
+        });
     })
 })
 // router.get('/store-products/:id', function(req, res){
@@ -323,7 +389,7 @@ function ensureAuth(req, res, next) {
 
 var io = require('socket.io').listen(server);
 var SessionSockets = require('session.socket.io'),
-sessionSockets = new SessionSockets(io, session, cookieParser);
+    sessionSockets = new SessionSockets(io, session, cookieParser);
 sessionSockets.on('connection', function (socket) {
     // google("flower near kothrud", function (err, res) {
 

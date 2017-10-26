@@ -6,7 +6,12 @@
         <thead class="headrow">
           <tr>
             <div class="row">
-              <th id="heading" colspan="2">Products Available</th>
+              {{#if canadd}}
+              <th id="heading" colspan="2">{{storename}}</th>
+              
+               {{else}}
+              <th id="heading" colspan="2">Products Avaialable</th>
+              {{/if}}
               <!-- <td class="col-md-2"></td><td class="col-md-5"></td> -->
               <td align="right" class="col-md-5">
                 <form action="#" method="get" class="sear">

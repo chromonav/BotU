@@ -1,29 +1,6 @@
-var socket = io('http://localhost:8000/');
-
-socket.on('chat_reply', function (data) {
-    console.log(data);
-    $(".messages").append(`
-                  <li class="message left appeared">
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-                <div class="text">${data.text}</div>
-            </div>
-        </li>
-    `)
-    $(".messages").animate({ scrollTop: $(".messages").prop('scrollHeight')}, 300);
-});
-
-$(document).ready(function () {
-    $('.send_message').click(function () {
-        var message = $(".message_input").val()
-        socket.emit("client_message", {
-            text: message
-        }
-        )
-      $(".message_input").val("")
-
-        $(".messages").append(`
-        
+function send_message() {
+    var message = $(".message_input").val()
+    $(".messages").append(`  
         <li class="message right appeared">
             <div class="avatar"></div>
             <div class="text_wrapper">
@@ -31,31 +8,54 @@ $(document).ready(function () {
             </div>
         </li>
     `)
+    $.ajax({
+        "url": "/reply",
+        method: "POST",
+        data: { message: message },
+        success: function (data) {
+            console.dir("data")
+            $(".message_input").val("")
+
+            $(".messages").append(`
+        
+        <li class="message left appeared">
+            <div class="avatar"></div>
+            <div class="text_wrapper">
+                <div class="text">${data}</div>
+            </div>
+        </li>
+    `)
+        }
+    })
+}
+$(document).ready(function () {
+
+    $(".messages").append(`
+        
+        <li class="message left appeared">
+            <div class="avatar"></div>
+            <div class="text_wrapper">
+                <div class="text">Hello Sir! I am your store keeper.<br/>What is your name?</div>
+            </div>
+        </li>
+    `)
+
+    $('.send_message').click(function () {
+        send_message()
+        $(".messages").animate({ scrollTop: $(".messages").prop('scrollHeight') }, 300);
 
     })
-    
-    
+
+    $('.message_input').keypress(function (e) {
+        if (e.which == 13) {
+            send_message()
+            $(".messages").animate({ scrollTop: $(".messages").prop('scrollHeight') }, 300);
+
+            return false;    //<---- Add this line
+        }
+    });
+
+
 })
 
 
-$('.message_input').keypress(function (e) {
-    if (e.which == 13) {
-            var message = $(".message_input").val()
-            socket.emit("client_message", {
-                text: message
-            }
-            )
-          $(".message_input").val("")
-    
-            $(".messages").append(`
-            
-            <li class="message right appeared">
-                <div class="avatar"></div>
-                <div class="text_wrapper">
-                    <div class="text">${message}</div>
-                </div>
-            </li>
-        `)
-      return false;    //<---- Add this line
-    }
-});

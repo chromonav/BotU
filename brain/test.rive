@@ -192,23 +192,24 @@
 // Learn stuff about our users.
 
 + (my name is| i am) *
-- <call>say_hello</call>
+- <call>my_name <star2></call>
 
++ i live [at|in] *
+- <call>my_loc <star></call>
 
 + my (mom|dad|mother|father|bro|brother|sis|sister|cousin|aunt|uncle) wants *
-- Your relative can get<get sau> at
+- Your <star1> can get<star2> at
 
-+ can you find where *
++ can you find [where] *
 - yes ,we have < star> in the following stores
+
 + can i *
 - Whether or not you can <star> depends on you more than on me.
 - Do you want to be able to <star>?
 - Perhaps you don't want to <star>.
 
-
-
 + do you have  *
--Yes , you can find<get rut> it in all the nearest retail stores
+-Yes , you can find <star> it in all the nearest retail stores
 
 + why can not i find *
 -<set thing=<star>> No, you will surely find <get star> it in the Mega Mart.
