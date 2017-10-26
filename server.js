@@ -338,10 +338,6 @@ router.get('/stores', function (req, res) {
         });
     })
 })
-// router.get('/store-products/:id', function(req, res){
-//    var i = req.params.id;
-
-// })
 
 router.post('/addStore', function (req, res, next) {
     if (connection.query(`insert into stores(sname, address) values("${req.body.newStore}", "${req.body.newLocation}")`)) {
