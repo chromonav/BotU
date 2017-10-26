@@ -129,21 +129,23 @@ router.post('/signin', function (req, res, next) {
 })
 
 router.post('/reply', function (req, res, next) {
+
     bot.setSubroutine("my_name", function (rs, args) {
         console.dir(args)
-        res.cookie("name", args[0])
+        req.session.name = args[0];
         return `hello ${args[0]}\n Where do you live?`
     })
     bot.setSubroutine("my_loc", function (rs, args) {
         console.dir(args)
-        res.cookie("location", args[0])
+        req.session.location = args[0];
         return `Great!\n How can i help you?`
     })
 
     bot.setSubroutine("find_product_in_store", function (rs, args) {
         console.dir(args)
+        console.dir("location = " + req.session.location);
         return new bot.Promise(function (resolve, reject) {
-            connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where p.pname="${args[0]}";`, function (err, row, fields) {
+            connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where p.pname="${args[0]}" and s.address like "%${req.session.location}%"; `, function (err, row, fields) {
                 if (err) {
                     console.dir(err)
                     reject("some error")
@@ -185,8 +187,6 @@ router.post('/reply', function (req, res, next) {
                     </p><br/> ${search_res}
                     `)
                 })
-
-
 
             } else {
                 console.dir("Error");
