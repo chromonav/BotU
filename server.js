@@ -75,24 +75,24 @@ app.use(function (req, res, next) {
     res.status(404).render("404")
 })
 
-router.get('/', function (req, res, next) {
-    res.render('index', { isSession: req.session.username ? true : false });
+router.get('/',ensureAuth("user"), function (req, res, next) {
+    res.render('index', { type: req.session.type });
 });
 
 router.get('/signin', function (req, res, next) {
-    res.render('signin', { isSession: req.session.username ? true : false });
+    res.render('signin', { type: req.session.type });
 });
 
 router.get('/admin', function (req, res) {
     res.render('adminlogin');
 })
 
-router.post('/admin', function (req, res, next) {
+router.post('/admin',ensureAuth("post"), function (req, res, next) {
     console.dir(req.body)
-    if (isAuth(username:req.body.username, password:req.body.password, type:"admin")) {
+    if (isAuth({ username: req.body.username, password: req.body.password, type: "admin" })) {
         req.session.username = req.body.username;
         req.session.password = req.body.password;
-        req.session.type = 'user'
+        req.session.type = 'admin'
         // console.dir(req.session)
         res.redirect('/')
     } else {
@@ -226,7 +226,6 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-var server = app.listen(port);
 
 router.get('/products/:id?', ensureAuth('admin'), function (req, res) {
     var i = req.params.id;
@@ -364,6 +363,8 @@ router.post('/deleteStore', ensureAuth('admin'), function (req, res, next) {
     }
 })
 
+
+
 const isAuth = function (details) {
     // console.dir(details)
     return new Promise(function (resolve, reject) {
@@ -386,10 +387,21 @@ function ensureAuth(type) {
             isAuth({ username: req.session.username, password: req.session.password, type: type }).then(function () {
                 next()
             }).catch(function () {
-                res.redirect('/signin')
+                console.dir(type)
+                if (type == "user") {
+                    res.redirect('/signin')
+                } else {
+                    res.redirect('/admin')
+                }
             })
         } else {
-            res.redirect('/signin')
+            if (type == "user") {
+                res.redirect('/signin')
+            } else {
+                res.redirect('/admin')
+            }
         }
     }
 }
+
+app.listen(8000)
