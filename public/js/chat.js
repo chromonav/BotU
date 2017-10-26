@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     $('.send_message').click(function () {
         send_message()
-        $(".messages").animate({ scrollTop: $(".messages").prop('scrollHeight') }, 300);
+        $(".messages").animate({   scrollTop: $(".messages").prop('scrollHeight') }, 300);
 
     })
 
