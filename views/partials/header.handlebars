@@ -3,19 +3,16 @@
         <li> <a class="navbar-brand" href="/">
             <img src="/images/chatbot.png" class="d-inline-block align-top" alt="">UBot 
             </a>
-        </li>&nbsp&nbsp&nbsp {{#if type}}
+        </li>&nbsp&nbsp&nbsp 
+    {{#if type.admin}}
         <li class="nav-item hvr-underline-from-center">
             <a class="nav-link " href="/products">Products</a>
         </li>
         <li class="nav-item hvr-underline-from-center">
             <a class="nav-link " href="/stores">Stores</a>
         </li>
-        <li class="nav-item hvr-underline-from-center">
-            <a class="nav-link " href="#">Chats</a>
-        </li>
         {{/if}}
     </ul>
-
 
 
 
@@ -30,7 +27,7 @@
 
     </div>
 
-    <button class="tog" onclick="tog()">&#9776;</button> {{#if isSession}}
+    <button class="tog" onclick="tog()">&#9776;</button> {{#if type}}
 
     <div class="hid" id="na">
         <br>
