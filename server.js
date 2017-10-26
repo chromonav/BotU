@@ -1,13 +1,14 @@
 require('dotenv').config()
 var express = require('express')
     , exphbs = require('express-handlebars')
-    , morgan = require('morgan')
+    , organ = require('morgan')
     , bodyParser = require('body-parser')
     , methodOverride = require('method-override')
     , app = express()
     , port = process.env.PORT || 8000
     , router = express.Router()
     , moment = require("moment");
+var morgan = require("morgan")
 var google = require("google")
 var cookieParser = require('cookie-parser')
 
@@ -163,17 +164,40 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
                     console.dir(err)
                     reject("some error")
                 }
-                console.dir(row.length)
+                console.dir(row)
                 if (row.length == 0) {
                     reject("NO RESULT")
                 } else {
-                    resolve(`${row[0].sname}.<br\> It is near ${row[0].address} <br\>It's price is ${row[0].price}`)
+                    resolve(`${row[0].sname}.<br/> It is near ${row[0].address} <br\>It's price is ${row[0].price}`)
+                }
+                // resolve(`${row[0].sname} located in ${row[0].address}`)
+            })
+        })
+    })
+    bot.setSubroutine("find_store", function (rs, args) {
+        console.dir(args)
+        return new bot.Promise(function (resolve, reject) {
+            connection.query(`select p.*,s.* from products p inner join store_products sp on sp.pid = p.pid inner join stores s on s.sid = sp.sid where s.sname="${args[0]}";`, function (err, row, fields) {
+                if (err) {
+                    console.dir(err)
+                    reject("some error")
+                }
+                console.dir(row)
+                if (row.length == 0) {
+                    reject("NO RESULT")
+                } else {
+                    productsdata = ""
+                    for(var i = 0; i<row.length;i++){
+                        productsdata  = productsdata + `<br/>${row[i].pname} : Rs. ${row[i].price}`
+                    }
+                    resolve(` <br/> Following are the products available <br/> ${productsdata}`)
                 }
                 // resolve(`${row[0].sname} located in ${row[0].address}`)
             })
         })
     })
 
+   
     // console.dir(req.body)
     bot.replyAsync(req.cookies.name ? req.cookies.name : "new-user", req.body.message, this, function (error, reply) {
         // console.dir(reply)
