@@ -1,0 +1,15 @@
+
+<div class="box Absolute-Center is-Responsive">
+    <form class="form-horizontal" action="/adminlogin" method="post">
+        <div class="signup">Admin</div>
+        <input class="input" type="text" name="username" placeholder="Username">
+        <input class="input" type="password" name="password" placeholder="Password">
+        <div class="for" style="margin-top:20px;"></div>
+        <button class="btn1 reg">Login</button>
+        {{#if error}} 
+          <div class="isa_error"> <i class="fa fa-times-circle"></i>
+        &nbsp&nbspWrong Username or Password </div>
+    {{/if}}
+    </form>
+    
+</div>
