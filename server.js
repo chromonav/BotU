@@ -83,6 +83,14 @@ router.get('/signin', function (req, res, next) {
     res.render('signin', { isSession: req.session.username ? true : false });
 });
 
+router.get('/admin', function(req, res) {
+    res.render('adminlogin');
+})
+
+router.post('/adminlogin', function(req, res, next) {
+
+})
+
 router.get('/signup', function (req, res, next) {
     res.render('signup');
 });
