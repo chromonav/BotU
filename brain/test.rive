@@ -192,7 +192,7 @@
 // Learn stuff about our users.
 
 + (my name is| i am) *
-- <call>my_name <star2></call>
+- <call>my_name<star2></call>
 
 + i live [at|in] *
 - <call>my_loc <star></call>
@@ -204,15 +204,14 @@
 - yes ,we have < star> in the following stores
 
 + can i *
-- Whether or not you can <star> depends on you more than on me.
-- Do you want to be able to <star>?
-- Perhaps you don't want to <star>.
+- Yes Sir, you can find <star> in  <call>find_product_in_store <star> </call>
+
 
 + do you have  *
--Yes , you can find <star> it in all the nearest retail stores
+-Yes ,you can find <star> it is in 
 
 + why can not i find *
--<set thing=<star>> No, you will surely find <get star> it in the Mega Mart.
+-No, you will surely find <star> in <call>find_product_in_store <star> </call>
 
 
 + [*] (fuck|fucker|shit|damn|shut up|bitch) [*]
