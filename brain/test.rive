@@ -198,17 +198,17 @@
 - <call>my_loc <star></call>
 
 + my (mom|dad|mother|father|bro|brother|sis|sister|cousin|aunt|uncle) wants *
-- Your <star1> can get<star2> at
+- Your <star1> can get<star2> at <call>find_product_in_store <star2> </call>
 
 + can you find [where] *
-- yes ,we have < star> in the following stores
+- yes ,we have < star> in the following stores <call> find_product_in_store </call>
 
 + can i *
 - Yes Sir, you can find <star> in  <call>find_product_in_store <star> </call>
 
 
 + do you have  *
--Yes ,you can find <star> it is in 
+-Yes ,you can find <star> it is in <call>find_product_in_store <star> </call>
 
 + why can not i find *
 -No, you will surely find <star> in <call>find_product_in_store <star> </call>
@@ -223,27 +223,25 @@
 - Does using that kind of language make you feel better?
 
 + (hey|hi|heyy|hii|hiii|hello)
-- hello human, My name is Ubot. What is you name?
+- hello human, My name is Ubot. 
 
-+ (what is my name|who am i)
-- You're <get name>, right?
 
 + *
 - I don't have a reply for that.
 - Try asking that a different way.
 
 + where can i (get|find) [to] *
-- <set item=<formal>>You can get <get item> <call>find_product_in_store</call>from Reliance store, you may also get it in shanti store.
--<set item=<formal>>You can get <get item> from spencers store, you may also get it in Om vitthal  store.
+- You can get <star2>  <call>find_product_in_store <star2> </call>
+
 
 + i want [to] *
-- <set item=<formal>>sure you may get <get item> from <call>find_product_in_store <star> </call>.
+-Sure you may get <star> from <call>find_product_in_store <star> </call>.
 
-+ what all items are available in * [store|shop]
-- <set store=<formal>> You can get the following items in <get store>.
++ what all (items|products) are available in * [store|shop]
+-  You can get the following items in <star> <call> find_store  <star2> </call>.
 
-+ which items are available in *
-- <set shop=<formal>>following items would be
++ which products are available in *
+- Items available at <star> <call> find_store <star> </call>.
 
 + *
 - Sorry i dont have an answer to that , i'll come back to you shortly.
@@ -255,10 +253,10 @@
 - Aww! You've just ruined my day.<bot mood=depressed>
 
 + i urgently need *
-- <set wer=<<formally>>if it is so urgent to get <get wer> order it from BigBasket..you will get it much faster.
+- if it is so urgent to get <star> you may get it at <call> find_product_in_store <star> </call>.
 
 + hey bot i (need|want) *
-- <set qwer=<formally>>You can get <get qwer> at following stores
+- >You can get <star> at <call> find_product_in_store <star> </call>.
 
 +test [calling] javascript
 -response from javascript: <call>say_hello</call>
