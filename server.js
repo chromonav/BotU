@@ -179,7 +179,17 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
                 }
                 console.dir(row)
                 if (row.length == 0) {
-                    reject("NO RESULT")
+                    connection.query(`SELECT * from unavailableProducts where upname="${args[0]}" and uplocation="${req.session.location}"`, function(err, rows, fields){
+                        if(rows.length == 0) {
+                         connection.query(`INSERT INTO unavailableProducts(upname, uplocation) values("${args[0]}", "${req.session.location}");`, function(err, rows, fields) {
+                            if(err) {
+                                console.dir("Error while inserting unavailable product" + err)
+                            }
+                        }
+                    )
+                }
+                    })
+                    reject("NO RESULT")                    
                 } else {
                     resolve(`${row[0].sname}.<br/> It is near ${row[0].address} <br\>It's price is ${row[0].price}`)
                 }
@@ -218,6 +228,7 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
             if (error == "NO RESULT") {
                 //         res.send()
                 // res.send("no result")
+                console.dir("msg = " + req.body.message)
                 google(`${req.body.message} near ${req.cookies.location}`, function (err, results) {
                     var search_res = "";
                     results.links.map(function (link, val) {
@@ -231,9 +242,9 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
                         }
                     })
 
-                    console.dir(search_res)
+                  //  console.dir(search_res)
                     res.send(`<p>
-                    We could not find resluts in our database. Here are google search results: 
+                    We could not find resluts in our database, We have reported the product to the admin. Till now Here are google search results: 
                     </p><br/> ${search_res}
                     `)
                 })
@@ -268,6 +279,74 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
+router.get('/productsRequests', ensureAuth('admin'), function(req, res) {
+    connection.query(`SELECT *from unavailableProducts`, function(err, rows, fields) {
+        res.render('productsRequests', {type: totype(req.session.type), data : rows});        
+    })
+})
+
+router.post('/addun', function(req, res) {
+    var pid ;
+    var sid;
+    connection.query(`SELECT *FROM products where pname="${req.body.pname}"`, function(err, rows, fields) {
+        if(err) { 
+            console.dir("error at = " +err);
+        }
+        if(rows.length != 0) {
+            console.dir(rows[0].pid)
+            pid = rows[0].pid;
+            connection.query(`SELECT * from stores where address like "%${req.body.location}%"`, function(err, row, fields) {
+                if(row.length != 0) {
+                if(err) {
+                    console.dir("errr at retriving = "  + err)
+                }
+                console.dir("sid = " + row[0].sid)
+                console.dir("pid = " + pid)
+                connection.query(`INSERT INTO store_products(sid, pid) VALUES(${row[0].sid}, ${pid})`, function(err, rows, fields) {
+                    if(err) {
+                        console.dir("errro at  = her "+err);
+                    }
+                    console.dir("loc=" + req.body.location)
+                    console.dir("pname=" + req.body.pname)
+                    connection.query(`DELETE FROM unavailableProducts where upname="${req.body.pname}" and uplocation="${req.body.location}"`, function(err, row, fields) {
+                        if(err)
+                            console.dir("Error while deleting = " + err)
+                        res.redirect('/productsRequests');                        
+                    } )
+                } )
+            }   
+            })
+            
+        } else {
+            connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.pname}", ${req.body.price})`, function(err, rows, fields) {
+                if(err) 
+                    console.log(err)
+                else {
+                    connection.query(`SELECT *from products where pname="${req.body.pname}"`, function(err, rows, fields) {
+                        if(err)
+                            console.log(err)
+                        else {
+                            pid = rows[0].pid;
+                            connection.query(`SELECT *FROM stores where address like "%${req.body.location}%"`, function(err, rows, fileds) {
+                                sid = rows[0].sid;
+                                console.log("sid = " + sid);
+                                console.log("pid = " + pid);
+                                connection.query(`INSERT INTO store_products VALUES(?, ?)`, [storeid, pid], function (err, rows, fields) {
+                                    if (err) {
+                                        console.log("Error while adding product in store_products table");
+                                    } else {
+                                        res.redirect('/productsRequests');                                                                
+                                    }
+                                })
+                            })
+                        }
+                    })
+                }     
+            })
+        }   
+    })
+    //connection.query(`INSERT INTO `)
+})
 
 router.get('/products/:id?', ensureAuth('admin'), function (req, res) {
     var i = req.params.id;
