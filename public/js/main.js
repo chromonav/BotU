@@ -106,8 +106,8 @@ $(".input").focusout(function() {
             },
             mob: {
                 required: true,
-                minlength: 9 ,
-                maxlength: 9  
+                minlength: 10 ,
+                maxlength: 10  
             },
 
             pass: {

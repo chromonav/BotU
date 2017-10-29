@@ -1,0 +1,64 @@
+<div class="container prodcontain">
+  <div class="row">
+
+    <div class="col-md-12">
+      <table class="prodtable table table-list-search">
+        <thead class="headrow">
+          <tr>
+            <div class="row">
+              {{#if canadd}}
+              <th id="heading" colspan="2">{{storename}}</th>
+              
+               {{else}}
+              <th id="heading" colspan="2">Products Requests</th>
+              {{/if}}
+              <!-- <td class="col-md-2"></td><td class="col-md-5"></td> -->
+              <td align="right" class="col-md-5">
+                <form action="#" method="get" class="sear">
+                  <div class="input-group">
+                    <input class="form-control" id="system-search" name="q" placeholder="Search for Product" required>
+                    <td><span class="input-group-btn">
+			    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+		  </span>
+                    </td>
+                  </div>
+                </form>
+
+              </td>
+
+            </div>
+          </tr>
+        </thead>
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th class="pname">Product</th>
+            <th>Price</th>
+            <th>Add</th>
+          </tr>
+
+        </thead>
+        <tbody>
+          
+          {{#each data}}
+          <tr class="data">
+            <form action="/addun" method="POST">
+            <td>{{this.uplocation}}</td>
+            <td>{{this.upname}}</td>
+            <input type="hidden" name="location" value={{this.uplocation}}> 
+            <input type="hidden" name="pname" value={{this.upname}}>
+              <td><input type="number" name="price" class="form-control" placeholder="Price..."></td>
+              <td>
+                <button type="submit" name="add" value="add" class="btn btn-primary btn-xs"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
+              </td>    
+            </button>
+            </form>
+          </tr>
+          {{/each}}
+
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

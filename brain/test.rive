@@ -193,7 +193,7 @@
 
 + (my name is| i am) *
 - <call>my_name<star2></call>
-
+ 
 + i am [at|in] *
 - <call>my_loc <star></call>
 
@@ -237,8 +237,8 @@
 - You can get <star2>  <call>find_product_in_store <star2> </call>
 
 
-+ i want [to] *
--Sure you may get <star> from <call>find_product_in_store <star> </call>.
++ i (want|need) [to] *
+-Sure you may get <star2> from <call>find_product_in_store <sta2r> </call>.
 
 + what all (items|products) are available in * [store|shop]
 -  You can get the following items in <star> <call> find_store  <star2> </call>.
