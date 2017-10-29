@@ -213,6 +213,9 @@
 + why can not i find *
 -No, you will surely find <star> in <call>find_product_in_store <star> </call>
 
++ find *
+- Found <star> it is at <call>find_product_in_store <star> </call>
+
 
 + [*] (fuck|fucker|shit|damn|shut up|bitch) [*]
 - Does it make you feel strong to use that kind of language?
