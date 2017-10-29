@@ -226,10 +226,8 @@ router.post('/reply', ensureAuth('user'), function (req, res, next) {
         // console.dir(reply)
         if (error) {
             if (error == "NO RESULT") {
-                //         res.send()
-                // res.send("no result")
-                console.dir("msg = " + req.body.message)
-                google(`${req.body.message} near ${req.cookies.location}`, function (err, results) {
+
+                google(`${req.body.message} near ${req.session.location}`, function (err, results) {
                     var search_res = "";
                     results.links.map(function (link, val) {
                         if (link.link) {
@@ -331,7 +329,7 @@ router.post('/addun', function(req, res) {
                                 sid = rows[0].sid;
                                 console.log("sid = " + sid);
                                 console.log("pid = " + pid);
-                                connection.query(`INSERT INTO store_products VALUES(?, ?)`, [storeid, pid], function (err, rows, fields) {
+                                connection.query(`INSERT INTO store_products VALUES(?, ?)`, [sid, pid], function (err, rows, fields) {
                                     if (err) {
                                         console.log("Error while adding product in store_products table");
                                     } else {
