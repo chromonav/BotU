@@ -2,6 +2,11 @@
   <div class="row">
 
     <div class="col-md-12">
+      {{#if msg }} 
+      <div class="alert alert-primary" role="alert">
+        Can't add product no store exists, please add store first
+      </div>
+      {{/if}}
       <table class="prodtable table table-list-search">
         <thead class="headrow">
           <tr>
