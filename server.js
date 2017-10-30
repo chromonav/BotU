@@ -279,13 +279,14 @@ router.get('/signout', function (req, res, next) {
 
 router.get('/productsRequests', ensureAuth('admin'), function(req, res) {
     connection.query(`SELECT *from unavailableProducts`, function(err, rows, fields) {
-        res.render('productsRequests', {type: totype(req.session.type), data : rows});        
+        res.render('productsRequests', {msg : false, type: totype(req.session.type), data : rows});        
     })
 })
 
 router.post('/addun', function(req, res) {
     var pid ;
     var sid;
+
     connection.query(`SELECT *FROM products where pname="${req.body.pname}"`, function(err, rows, fields) {
         if(err) { 
             console.dir("error at = " +err);
@@ -295,9 +296,9 @@ router.post('/addun', function(req, res) {
             pid = rows[0].pid;
             connection.query(`SELECT * from stores where address like "%${req.body.location}%"`, function(err, row, fields) {
                 if(row.length != 0) {
-                if(err) {
-                    console.dir("errr at retriving = "  + err)
-                }
+                    if(err) {
+                        console.dir("errr at retriving = "  + err)
+                    }
                 console.dir("sid = " + row[0].sid)
                 console.dir("pid = " + pid)
                 connection.query(`INSERT INTO store_products(sid, pid) VALUES(${row[0].sid}, ${pid})`, function(err, rows, fields) {
@@ -326,16 +327,23 @@ router.post('/addun', function(req, res) {
                         else {
                             pid = rows[0].pid;
                             connection.query(`SELECT *FROM stores where address like "%${req.body.location}%"`, function(err, rows, fileds) {
-                                sid = rows[0].sid;
-                                console.log("sid = " + sid);
-                                console.log("pid = " + pid);
-                                connection.query(`INSERT INTO store_products VALUES(?, ?)`, [sid, pid], function (err, rows, fields) {
-                                    if (err) {
-                                        console.log("Error while adding product in store_products table");
-                                    } else {
-                                        res.redirect('/productsRequests');                                                                
-                                    }
-                                })
+                                console.log("length = " + rows.length)
+                                if(rows.length != 0)  {
+                                    sid = rows[0].sid;
+                                    console.log("sid = " + sid);
+                                    console.log("pid = " + pid);
+                                    connection.query(`INSERT INTO store_products VALUES(?, ?)`, [sid, pid], function (err, rows, fields) {
+                                        if (err) {
+                                            console.log("Error while adding product in store_products table");
+                                        } else {
+                                            res.redirect('/productsRequests');                                                                
+                                        }
+                                    })
+                                } else {
+                                    connection.query(`SELECT *from unavailableProducts`, function(err, rows, fields) {
+                                        res.render('productsRequests', {msg : true, type: totype(req.session.type), data : rows});        
+                                    })                                                                                                    
+                                }
                             })
                         }
                     })
