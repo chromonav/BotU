@@ -277,22 +277,15 @@ router.get('/signout', function (req, res, next) {
     })
 })
 
-<<<<<<< HEAD
 router.get('/productsRequests', ensureAuth('admin'), function (req, res) {
     connection.query(`SELECT *from unavailableProducts`, function (err, rows, fields) {
         res.render('productsRequests', { type: totype(req.session.type), data: rows });
-=======
-router.get('/productsRequests', ensureAuth('admin'), function(req, res) {
-    connection.query(`SELECT *from unavailableProducts`, function(err, rows, fields) {
-        res.render('productsRequests', {msg : false, type: totype(req.session.type), data : rows});        
->>>>>>> 9f55241b6e0e6b3c3c1e9518b2df0e154ee668b9
     })
 })
 
 router.post('/addun', function (req, res) {
     var pid;
     var sid;
-<<<<<<< HEAD
     // connection.query(`SELECT *FROM products where pname="${req.body.pname}"`, function(err, rows, fields) {
     //     if(err) { 
     //         console.dir("error at = " +err);
@@ -350,73 +343,6 @@ router.post('/addun', function (req, res) {
     //         })
     //     }   
     // })
-=======
-
-    connection.query(`SELECT *FROM products where pname="${req.body.pname}"`, function(err, rows, fields) {
-        if(err) { 
-            console.dir("error at = " +err);
-        }
-        if(rows.length != 0) {
-            console.dir(rows[0].pid)
-            pid = rows[0].pid;
-            connection.query(`SELECT * from stores where address like "%${req.body.location}%"`, function(err, row, fields) {
-                if(row.length != 0) {
-                    if(err) {
-                        console.dir("errr at retriving = "  + err)
-                    }
-                console.dir("sid = " + row[0].sid)
-                console.dir("pid = " + pid)
-                connection.query(`INSERT INTO store_products(sid, pid) VALUES(${row[0].sid}, ${pid})`, function(err, rows, fields) {
-                    if(err) {
-                        console.dir("errro at  = her "+err);
-                    }
-                    console.dir("loc=" + req.body.location)
-                    console.dir("pname=" + req.body.pname)
-                    connection.query(`DELETE FROM unavailableProducts where upname="${req.body.pname}" and uplocation="${req.body.location}"`, function(err, row, fields) {
-                        if(err)
-                            console.dir("Error while deleting = " + err)
-                        res.redirect('/productsRequests');                        
-                    } )
-                } )
-            }   
-            })
-            
-        } else {
-            connection.query(`INSERT INTO products(pname, price) VALUES("${req.body.pname}", ${req.body.price})`, function(err, rows, fields) {
-                if(err) 
-                    console.log(err)
-                else {
-                    connection.query(`SELECT *from products where pname="${req.body.pname}"`, function(err, rows, fields) {
-                        if(err)
-                            console.log(err)
-                        else {
-                            pid = rows[0].pid;
-                            connection.query(`SELECT *FROM stores where address like "%${req.body.location}%"`, function(err, rows, fileds) {
-                                console.log("length = " + rows.length)
-                                if(rows.length != 0)  {
-                                    sid = rows[0].sid;
-                                    console.log("sid = " + sid);
-                                    console.log("pid = " + pid);
-                                    connection.query(`INSERT INTO store_products VALUES(?, ?)`, [sid, pid], function (err, rows, fields) {
-                                        if (err) {
-                                            console.log("Error while adding product in store_products table");
-                                        } else {
-                                            res.redirect('/productsRequests');                                                                
-                                        }
-                                    })
-                                } else {
-                                    connection.query(`SELECT *from unavailableProducts`, function(err, rows, fields) {
-                                        res.render('productsRequests', {msg : true, type: totype(req.session.type), data : rows});        
-                                    })                                                                                                    
-                                }
-                            })
-                        }
-                    })
-                }     
-            })
-        }   
-    })
->>>>>>> 9f55241b6e0e6b3c3c1e9518b2df0e154ee668b9
     //connection.query(`INSERT INTO `)
 
     connection.query(`DELETE FROM unavailableProducts where upname="${req.body.pname}" and uplocation="${req.body.location}"`, function (err, row, fields) {
